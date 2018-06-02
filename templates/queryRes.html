@@ -57,20 +57,20 @@
 <div id="bryan">
 </div>
 
-<div name="block-template" class="sr-only">
+<div name="block-template" class= "sr-only">
     <div class = "container-fluid">
         <div class = "row">
-            <div class="text-center"><label class="col-lg-2 col-md-2 col-sm-2" style = "font-size:120%" id = "ID_TRAIN_ID">TRAIN_ID</label></div>
+            <div class="text-center"><label class="col-lg-2 col-md-2 col-sm-2" style = "font-size:180%" id = "ID_TRAIN_ID">TRAIN-ID</label></div>
             <div style="margin-top:1.4%">
                 <div class="col-lg-3 col-md-3 col-sm-3" >
-                    <label style = "font-size:95%; margin-left:5%" id = "lloc1">REPALCE-LOC1</label>
+                    <label style = "font-size:100%; margin-left:5%" id = "lloc1">REPLACE-LOC1</label>
                     <label class = "small">TIME-1</label>
                 </div>
                 <div class="col-lg-3 col-md-2 col-sm-3" >
-                    <label style = "font-size:95%;" id = "lloc2">REPALCE-LOC2</label>
+                    <label style = "font-size:100%;" id = "lloc2">REPLACE-LOC2</label>
                     <label class = "small" >TIME-2</label>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4" name="kind-type">
+                <div class="col-lg-4 col-md-4 col-sm-4" id="ID_TRAIN_ID_TIC">
                 </div>
             </div>
         </div>
@@ -79,9 +79,9 @@
 
 <div name="ticket_template"  class="sr-only">
     <div class="row" style="font-size:80%">
-        <label style="font-size:80%">高级软卧</label>
-        <label style="font-size:100%">$55541.66</label>
-        <label style="font-size:60%">余票:2222</label>
+        <label style="font-size:80%">TIC_TYPE</label>
+        <label style="font-size:100%">TIC_PRICE</label>
+        <label style="font-size:60%">余票:TIC_LEFT</label>
         <button class="btn btn-normal btn-pay pull-right">PAY!</button>
     </div>
 </div>
@@ -102,10 +102,15 @@
                 cache : false,
                 success:function(data){
                     trainData = data;
+                    var ticHandle = "";
                     for(var i = 1; i < trainData.length; ++i){
                         var myhtm = createTable(i);
                         $("#bryan").append(myhtm);
+                        ticHandle = '#' + trainData[i][0] + 'T';
+                        $(ticHandle).empty();
+                        $(ticHandle).append(buyTicket(i));
                     }
+                    $("#bryan").append("<h5>")
                 },
                 error:function(e){
                 }
@@ -114,7 +119,6 @@
 
     function createTable(dataId){
        var currentTrainData = trainData[dataId];
-       alert(currentTrainData);
        var trainId = currentTrainData[0];
        var trainIdtmp = "";
        var loc1="", loc2="";
@@ -128,13 +132,28 @@
        time1 = currentTrainData[3];
        time2 = currentTrainData[6];
        var templateHtm = document.getElementsByName("block-template")[0].innerHTML;
-       templateHtm.replace("REPLACE-LOC1", loc1);
-       templateHtm.replace("REPLACE-LOC2", loc2);
-       templateHtm.replace("TIME-1", time1);
-       templateHtm.replace("TIME-2", time2);
+       templateHtm = templateHtm.replace("ID_TRAIN_ID", currentTrainData[0]);
+       templateHtm = templateHtm.replace("ID_TRAIN_ID_TIC", currentTrainData[0]+'T');
+       templateHtm = templateHtm.replace("TRAIN-ID", trainId);
+       templateHtm = templateHtm.replace("REPLACE-LOC1", loc1);
+       templateHtm = templateHtm.replace("REPLACE-LOC2", loc2);
+       templateHtm = templateHtm.replace("TIME-1", time1);
+       templateHtm = templateHtm.replace("TIME-2", time2);
        return templateHtm;
     }
-    function buyTicket(trainid){
+    function buyTicket(dataId){
+        var payTemplate = "";
+        var ret = "";
+        for(var i = 7; i < trainData[dataId].length - 1; ++i){
+            payTemplate = document.getElementsByName("ticket_template")[0].innerHTML;
+            payTemplate = payTemplate.replace("TIC_TYPE", trainData[dataId][i]);
+            ++i;
+            payTemplate = payTemplate.replace("TIC_LEFT", trainData[dataId][i]);
+            ++i;
+            payTemplate = payTemplate.replace("TIC_PRICE", '¥ ' + parseFloat(trainData[dataId][i]).toFixed(2));
+            ret += payTemplate;
+        }
+        return ret;
     }
 </script>
 {% if loc1 and loc2 and ddate %}
