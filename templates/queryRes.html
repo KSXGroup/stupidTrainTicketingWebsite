@@ -60,7 +60,7 @@
 <div name="block-template" class="sr-only">
     <div class = "container-fluid">
         <div class = "row">
-            <div class="text-center"><label class="col-lg-2 col-md-2 col-sm-2" style = "font-size:200%" id = "ID_TRAIN_ID">TRAIN_ID</label></div>
+            <div class="text-center"><label class="col-lg-2 col-md-2 col-sm-2" style = "font-size:120%" id = "ID_TRAIN_ID">TRAIN_ID</label></div>
             <div style="margin-top:1.4%">
                 <div class="col-lg-3 col-md-3 col-sm-3" >
                     <label style = "font-size:95%; margin-left:5%" id = "lloc1">REPALCE-LOC1</label>
@@ -88,7 +88,7 @@
 
 
 <script type="text/javascript">
-    var trainData;
+   var trainData;
    function queryTicket(){
         $("#bryan").empty();
         var form = new FormData(document.getElementsByName("queryTicForm")[0]);
@@ -106,8 +106,6 @@
                         var myhtm = createTable(i);
                         $("#bryan").append(myhtm);
                     }
-                    alert(trainData);
-
                 },
                 error:function(e){
                 }
