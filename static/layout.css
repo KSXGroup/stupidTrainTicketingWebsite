@@ -1,0 +1,29 @@
+body{
+    background-color:#BBFFFF;
+}
+
+.jumbotron{
+    background: rgba(255,255,255,0);
+}
+
+.container {
+    background: rgba(255,255,255,0);
+}
+
+.form-container{
+    background: rgba(0,0,0,0.1);
+    border-radius: 0px !important;
+}
+
+.btn{
+    border-radius: 0px !important;
+}
+
+.form-control{
+    border-radius: 0px !important;
+}
+
+body{
+    background-color: #cfe2f3;
+}
+
