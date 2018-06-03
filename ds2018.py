@@ -87,25 +87,25 @@ def queryRes():
         loc1 = request.form['loc1']
         loc2 = request.form['loc2']
         ddate = request.form['ddate']
-        if loc1 == "" or loc2 == "" or ddate == "":
-            return json.dumps("")
-        qcmd = ' '.join(['query_ticket', loc1, loc2, ddate])
-        qcmd += " CDGKOTZ"
-        print(qcmd)
-        qstring = db_communicate(qcmd)
-        resList = re.split(r'\n', qstring)
-        for item in resList:
-            retList.append(re.split(r'[ ]', item))
-        restmp = retList[1 : len(retList) - 1]
-        restmp = sorted(restmp, key = lambda item : item[3].lower())
-        for i in range(1, len(resList) - 1):
-            retList[i] = restmp[i - 1]
-        retList.pop()
-        #for index in range(1, len(retList)):
-        #    retList[index][0] = re.search(r'[CDGKOTZ][0-9]*',retList[index][0]).group()
-        #    retList[index][0] = retList[index][0][0 : len(retList[index][0]) - 2]
-        qRes = json.dumps(retList)
-        return qRes
+        if request.form['id'] == 'queryRes':
+            if loc1 == "" or loc2 == "" or ddate == "":
+                return json.dumps("")
+            qcmd = ' '.join(['query_ticket', loc1, loc2, ddate])
+            qcmd += " CDGKOTZ"
+            print(qcmd)
+            qstring = db_communicate(qcmd)
+            resList = re.split(r'\n', qstring)
+            for item in resList:
+                retList.append(re.split(r'[ ]', item))
+            restmp = retList[1 : len(retList) - 1]
+            restmp = sorted(restmp, key = lambda item : item[3].lower())
+            for i in range(1, len(resList) - 1):
+                retList[i] = restmp[i - 1]
+            retList.pop()
+            qRes = json.dumps(retList)
+            return qRes
+        else:
+            return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'])
     else:
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
             user_name = session['user_name']
@@ -202,6 +202,15 @@ def settings():
         user_name = session['user_name']
         return render_template('settings.html', user_name=user_name)
 
+@app.route('/orderTic', methods=['POST', 'GET'])
+def orderTic():
+    if request.method == 'POST':
+        print("s");
+        return render_template('orderTic.html')
+    else:
+        err_info = "禁止访问"
+        return render_template('orderTic.html', err_info = err_info)
+
 @app.route('/debugger', methods=['GET', 'POST'])
 def debugger():
     if request.method == 'POST':
@@ -209,7 +218,6 @@ def debugger():
         if len(order.strip('\n')) == 0:
             return render_template("debugger.html")
         print(order)
-  #      pdb.set_trace()
         res = ""
         if order != "":
             res = db_communicate(order)
@@ -220,3 +228,4 @@ def debugger():
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 80, debug=True)
+

@@ -8,7 +8,7 @@
 <ul class="nav navbar-nav">
   <li><a href="{{ url_for('home') }}">首页</a></li>
   <li><a href="{{url_for('queryRes')}}">查询</a></li>
-  <li><a href="#">要填啥</a></li>
+  <li><a href="https://github.com/KSXGroup/stupidTrainTicketingWebsite">源码</a></li>
   {% if user_name %}
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user_name }}<span class="caret"></span></a>
@@ -26,6 +26,7 @@
 {% endblock %}
 
 {% block navbar_right %}
+{% if not user_name %}
 <ul class="nav navbar-nav navbar-right">
   <li><a href="{{ url_for('signin') }}">登录</a></li>
   <li><a href="{{ url_for('signup') }}">注册</a></li>
@@ -45,4 +46,34 @@
 </ul>
 {% endif %}
 {% endblock %}
+
+{% block body %}
+{% if err_info %}
+<div class = "form-container text-center" style="background-color:rgba(0,0,0,0.2);">
+    <div class="row">
+        <i class="glyphicon glyphicon-remove-circle col-md-4" style="margin-top:4%;font-size:800%;color:white;margin-left:10%"></i>
+        <h1 style="color:white; margin-top:6%;font-size:500%; margin-left:-5%;" class="col-md-4">{{err_info}}</h1>
+    </div>
+</div>
+{% else %}
+{% if train_id and ticket_type %}
+<div class= "form-container">
+</div>
+{% else %}
+{% endif %}
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -8,7 +8,7 @@
 <ul class="nav navbar-nav">
   <li><a href="{{ url_for('home') }}">首页</a></li>
   <li><a href="{{url_for('queryRes')}}">查询</a></li>
-  <li><a href="#">要填啥</a></li>
+  <li><a href="https://github.com/KSXGroup/stupidTrainTicketingWebsite">源码</a></li>
   {% if user_name %}
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的车票<span class="caret"></span></a>
@@ -63,7 +63,8 @@
         <div class="row">
             <input class="col-md-1 col-sm-1 col-xs-1 input-md form-control" name="loc1" placeholder="始发站" type="text">
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1 input-md form-control" name="loc2" placeholder="到达站" type="text">
-            <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1  input-md form-control date" name="ddate" placeholder="日期" type="text">
+            <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1  input-md form-control" id="mytimepicker" name="ddate" placeholder="日期" type="text">
+            <input class="sr-only" type="text" value="queryRes" name = "id">
             <button class="btn-lg btn-search glyphicon glyphicon-search col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1" type="button" onclick="queryTicket()"></button>
         </div>
     </form>
@@ -122,7 +123,7 @@
                         $("#bryan").append(myhtm);
                         ticHandle = '#' + trainData[i][0] + 'T';
                         $(ticHandle).empty();
-                        $(ticHandle).append(buyTicket(i));
+                        $(ticHandle).append(addBuyTicket(i));
                     }
                     $("#bryan").append("<h5>")
                 },
@@ -155,7 +156,8 @@
        templateHtm = templateHtm.replace("TIME-2", time2);
        return templateHtm;
     }
-    function buyTicket(dataId){
+
+    function addBuyTicket(dataId){
         var payTemplate = "";
         var ret = "";
         for(var i = 7; i < trainData[dataId].length - 1; ++i){
@@ -170,9 +172,16 @@
         }
         return ret;
     }
+
+
+    {% if postFrom == "mainpage" %}
+    $(document).ready(function(){
+        document.getElementsByName("loc1")[0].setAttribute('value', '{{loc1}}');
+        document.getElementsByName("loc2")[0].setAttribute('value', '{{loc2}}');
+        document.getElementsByName("ddate")[0].setAttribute('value', '{{ddate}}');
+        queryTicket();
+    });
+    {% endif %}
 </script>
-{% if loc1 and loc2 and ddate %}
-{% else %}
-{% endif %}
 {% endblock %}
 
