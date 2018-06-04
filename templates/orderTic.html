@@ -56,10 +56,32 @@
     </div>
 </div>
 {% else %}
-{% if train_id and ticket_type %}
+{% if train_id and tic_type and tic_date and tic_loc1 and tic_loc2 and tic_time1 and tic_time2 and tic_left and tic_price %}
 <div class= "form-container">
+   <form class="sr-only">
+       <input name = "corder-train-id" value = "{{train_id}}">
+       <input name = "corder-type" value = "{{tic_type}}">
+       <input name = "corder-date" value = "{{tic_date}}">
+       <input name = "corder-loc1" value = "{{tic_loc1}}">
+       <input name = "corder-loc2" value = "{{tic_loc2}}">
+       <input name = "corder-num" value = "1">
+   </form>
+   <label>列车编号:</label>
+   <label>出发:{{tic_loc1}}{{tic_time1}}</label>
+   <label>到达:{{tic_loc2}}{{tic_time2}}</label>
+   <label>类型:</label>
+   <label>票价:{{tic_price}}</label>
+   <input value = "1" class = "form-control"></input>
+   <label>余票:{{tic_left}}</label>
+   <button class="btn">PAY!</button>
 </div>
 {% else %}
+<div class = "form-container text-center" style="background-color:rgba(0,0,0,0.2);">
+    <div class="row">
+        <i class="glyphicon glyphicon-remove-circle col-md-4" style="margin-top:4%;font-size:800%;color:white;margin-left:10%"></i>
+        <h1 style="color:white; margin-top:6%;font-size:500%; margin-left:-5%;" class="col-md-4">错误的参数</h1>
+    </div>
+</div>
 {% endif %}
 {% endif %}
 {% endblock %}

@@ -56,6 +56,8 @@ def db_communicate(cmd):
                 res += line
             else:
                 break
+        print(cmd)
+        print(res)
         return res
 
 
@@ -92,7 +94,6 @@ def queryRes():
                 return json.dumps("")
             qcmd = ' '.join(['query_ticket', loc1, loc2, ddate])
             qcmd += " CDGKOTZ"
-            print(qcmd)
             qstring = db_communicate(qcmd)
             resList = re.split(r'\n', qstring)
             for item in resList:
@@ -205,8 +206,16 @@ def settings():
 @app.route('/orderTic', methods=['POST', 'GET'])
 def orderTic():
     if request.method == 'POST':
-        print("s");
-        return render_template('orderTic.html')
+        order_trainid = request.form['order-train-id']
+        order_loc1 = request.form['order-loc1']
+        order_loc2 = request.form['order-loc2']
+        order_date = request.form['order-date']
+        order_kind = request.form['order-kind']
+        order_time1 = request.form['order-time1']
+        order_time2 = request.form['order-time2']
+        order_price = request.form['order-price']
+        order_left = request.form['order-left']
+        return render_template('orderTic.html', train_id = order_trainid, tic_loc1 = order_loc1, tic_loc2 = order_loc2, tic_date = order_date, tic_type = order_kind, tic_price = order_price, tic_left = order_left, tic_time1 = order_time1, tic_time2 = order_time2)
     else:
         err_info = "禁止访问"
         return render_template('orderTic.html', err_info = err_info)

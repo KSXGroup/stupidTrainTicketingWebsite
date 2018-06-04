@@ -97,15 +97,29 @@
         <label style="font-size:80%">TIC_TYPE</label>
         <label style="font-size:100%">TIC_PRICE</label>
         <label style="font-size:60%">余票:TIC_LEFT</label>
-        <button class="btn btn-normal btn-pay pull-right" id = "BTN_TRAIN_ID_TYPE">PAY!</button>
+        <button class="btn btn-normal btn-pay pull-right" id = "BTN_TRAIN_ID_TYPE" onclick="startOrder(this)">PAY!</button>
     </div>
 </div>
+
+<form name="order_template" class="sr-only" action = "{{url_for('orderTic')}}" method = "POST">
+    <input name = "order-train-id" type = "text" value = "ORDER_TRAIN_ID">
+    <input name = "order-loc1" type = "text" value = "ORDER_LOC1">
+    <input name = "order-loc2" type = "text" value = "ORDER_LOC2">
+    <input name = "order-date" type = "text" value = "ORDER_DATE">
+    <input name = "order-kind" type = "text" value = "ORDER_KIND">
+    <input name = "order-time1" type = "text" value = "ORDER_TIME1">
+    <input name = "order-time2" type = "text" value = "ORDER_TIME2">
+    <input name = "order-price" type = "text" value = "ORDER_PRICE">
+    <input name = "order-left" type = "text" value = "ORDER_LEFT">
+</form>
 
 
 <script type="text/javascript">
    var trainData;
+   var currentDate;
    function queryTicket(){
         $("#bryan").empty();
+        currentDate = document.getElementsByName("ddate")[0].value;
         var form = new FormData(document.getElementsByName("queryTicForm")[0]);
         $.ajax({
                 url:'{{url_for("queryRes")}}',
@@ -162,7 +176,7 @@
         var ret = "";
         for(var i = 7; i < trainData[dataId].length - 1; ++i){
             payTemplate = document.getElementsByName("ticket_template")[0].innerHTML;
-            payTemplate = payTemplate.replace("BTN_TRAIN_ID_TYPE", trainData[dataId][0] + '-' + i);
+            payTemplate = payTemplate.replace("BTN_TRAIN_ID_TYPE", dataId + '-' + i);
             payTemplate = payTemplate.replace("TIC_TYPE", trainData[dataId][i]);
             ++i;
             payTemplate = payTemplate.replace("TIC_LEFT", trainData[dataId][i]);
@@ -173,6 +187,22 @@
         return ret;
     }
 
+    function startOrder(btn){
+        var dataString = btn.id;
+        var dataList = dataString.split('-');
+        var dataId = dataList[0];
+        var ticType = dataList[1];
+        document.getElementsByName("order-train-id")[0].setAttribute('value', trainData[dataId][0]);
+        document.getElementsByName("order-loc1")[0].setAttribute('value', trainData[dataId][1]);
+        document.getElementsByName("order-loc2")[0].setAttribute('value', trainData[dataId][4]);
+        document.getElementsByName("order-date")[0].setAttribute('value', currentDate);
+        document.getElementsByName("order-kind")[0].setAttribute('value', trainData[dataId][ticType]);
+        document.getElementsByName("order-time1")[0].setAttribute('value', trainData[dataId][3]);
+        document.getElementsByName("order-time2")[0].setAttribute('value', trainData[dataId][6]);
+        document.getElementsByName("order-left")[0].setAttribute('value', trainData[dataId][Number(ticType) + 1]);
+        document.getElementsByName("order-price")[0].setAttribute('value', parseFloat(trainData[dataId][Number(ticType) + 2]).toFixed(2));
+        $(document.getElementsByName("order_template")[0]).submit();
+    }
 
     {% if postFrom == "mainpage" %}
     $(document).ready(function(){
