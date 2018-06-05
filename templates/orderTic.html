@@ -57,7 +57,7 @@
 </div>
 {% else %}
 {% if train_id and tic_type and tic_date and tic_loc1 and tic_loc2 and tic_time1 and tic_time2 and tic_left and tic_price %}
-<div class= "form-container">
+<div class= "container-fluid">
    <form class="sr-only">
        <input name = "corder-train-id" value = "{{train_id}}">
        <input name = "corder-type" value = "{{tic_type}}">
@@ -66,14 +66,26 @@
        <input name = "corder-loc2" value = "{{tic_loc2}}">
        <input name = "corder-num" value = "1">
    </form>
-   <label>列车编号:</label>
-   <label>出发:{{tic_loc1}}{{tic_time1}}</label>
-   <label>到达:{{tic_loc2}}{{tic_time2}}</label>
-   <label>类型:</label>
-   <label>票价:{{tic_price}}</label>
-   <input value = "1" class = "form-control"></input>
-   <label>余票:{{tic_left}}</label>
-   <button class="btn">PAY!</button>
+   <h1 class = "row" style = "color:white; font-szie:200%; margin-left:1%"> 订单信息 </h1>
+   <label class = "row" style="color:white; margin-left:1%;">列车编号:{{train_id}}</label>
+   <div class = "row"  style="margin-left:1%;color:white">
+        <label>出发:{{tic_loc1}}</label>
+        <label class="small">{{tic_time1}}</label>
+   </div>
+   <div class="row" style="margin-left:1%;color:white">
+        <label>到达:{{tic_loc2}}<label>
+        <label class="small">{{tic_time2}}</label>
+   </div>
+   <div class="row" style="color:white;margin-left:1%">
+        <label style="">类型:{{tic_type}}</label>
+   </div>
+   <div class="row" style="color:white;margin-left:-1.7%">
+        <label class="col-md-2">数量:</label>
+        <input value = "1" class="form-control col-md-1 mytext" style="margin-left:-5%;"></input>
+   </div>
+   <div class="row" style="margin-left:1%;color:white"><label>单价:{{tic_price}}元</label></div>
+   <div class="row" style="margin-left:1%;color:white"><label>余票:{{tic_left}}</label></div>
+   <button class="btn btn-block btn-pay">提交订单</button>
 </div>
 {% else %}
 <div class = "form-container text-center" style="background-color:rgba(0,0,0,0.2);">
@@ -84,6 +96,11 @@
 </div>
 {% endif %}
 {% endif %}
+
+<script type="text/javascript">
+
+</script>
+
 {% endblock %}
 
 
