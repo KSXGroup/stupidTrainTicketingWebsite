@@ -112,7 +112,7 @@ def queryRes():
             user_name = session['user_name']
         else:
             user_name = None
-        return render_template('queryRes.html')
+        return render_template('queryRes.html', user_name = user_name)
 
 @app.route('/signin', methods=['POST', 'GET'])
 def signin():
@@ -153,7 +153,7 @@ def signup():
             session['home_success_info'] = 'Registration successful! Your account ID is %s.' % (userid)
             return redirect(url_for('home'))
     else:
-        return render_template('signup.html')
+        return render_template('signup.html', user_name = session['user_name'])
 
 @app.route('/signout', methods=['GET'])
 def signout():
@@ -206,19 +206,43 @@ def settings():
 @app.route('/orderTic', methods=['POST', 'GET'])
 def orderTic():
     if request.method == 'POST':
-        order_trainid = request.form['order-train-id']
-        order_loc1 = request.form['order-loc1']
-        order_loc2 = request.form['order-loc2']
-        order_date = request.form['order-date']
-        order_kind = request.form['order-kind']
-        order_time1 = request.form['order-time1']
-        order_time2 = request.form['order-time2']
-        order_price = request.form['order-price']
-        order_left = request.form['order-left']
-        return render_template('orderTic.html', train_id = order_trainid, tic_loc1 = order_loc1, tic_loc2 = order_loc2, tic_date = order_date, tic_type = order_kind, tic_price = order_price, tic_left = order_left, tic_time1 = order_time1, tic_time2 = order_time2)
+        if session['user_id'] != "":
+            if request.form['form-name'] == "sorder":
+                order_trainid = request.form['order-train-id']
+                order_loc1 = request.form['order-loc1']
+                order_loc2 = request.form['order-loc2']
+                order_date = request.form['order-date']
+                order_kind = request.form['order-kind']
+                order_time1 = request.form['order-time1']
+                order_time2 = request.form['order-time2']
+                order_price = request.form['order-price']
+                order_left = request.form['order-left']
+                return render_template('orderTic.html',user_name = session['user_name'], train_id = order_trainid, tic_loc1 = order_loc1, tic_loc2 = order_loc2, tic_date = order_date, tic_type = order_kind, tic_price = order_price, tic_left = order_left, tic_time1 = order_time1, tic_time2 = order_time2)
+            else:
+                if request.form['form-name'] == "corder":
+                    corder_trainid = request.form['corder-train-id']
+                    corder_type = request.form['corder-type']
+                    corder_loc1 = request.form['corder-loc1']
+                    corder_loc2 = request.form['corder-loc2']
+                    corder_date = request.form['corder-date']
+                    corder_num = request.form['corder-num']
+                    btcmd = ' '.join(['buy_ticket', session['user_id'], corder_num, corder_trainid, corder_loc1, corder_loc2, corder_date, corder_type])
+                    return json.dumps(db_communicate(btcmd))
+                else:
+                    return json.dumps("0")
+        else:
+            err_info = "未登录"
+            return render_template('orderTic.html', err_info = err_info)
     else:
         err_info = "禁止访问"
         return render_template('orderTic.html', err_info = err_info)
+
+
+
+@app.route('/userZone', methods=['GET', 'POST'])
+def userZone():
+    if request.method == 'GET':
+        return render_template('userZone.html', user_id = session['user_id'], user_name = session['user_name'])
 
 @app.route('/debugger', methods=['GET', 'POST'])
 def debugger():

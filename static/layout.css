@@ -1,5 +1,10 @@
 body{
-    background-color:#E0FFFF;
+    background-color:#FC7B02;
+}
+
+.form-control:focus{
+    border-color:white !important;
+    box-shadow: 0px 0px 10px white;
 }
 
 .jumbotron{
@@ -23,4 +28,16 @@ body{
     border-radius: 0px !important;
 }
 
+.navbar-nav > li > .dropdown-menu {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.dropdown-menu{
+    border-radius:0px !important;
+}
+
+.dropdown-menu > li > a{
+    color:white;
+    font-size: 110%;
+}
 

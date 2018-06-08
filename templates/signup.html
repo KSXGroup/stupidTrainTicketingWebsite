@@ -7,18 +7,17 @@
 {% block navbar_left %}
 <ul class="nav navbar-nav">
   <li><a href="{{ url_for('home') }}">首页</a></li>
-  <li><a href="{{url_for('queryRes')}}">查询</a></li>
+  <li><a href="{{url_for('queryRes')}}">余票查询</a></li>
   <li><a href="https://github.com/KSXGroup/stupidTrainTicketingWebsite">源码</a></li>
   {% if user_name %}
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的车票<span class="caret"></span></a>
     <ul class="dropdown-menu">
-      <li><a href="#">余票查询</a></li>
-      <li><a href="#">车票预订</a></li>
+      <li><a href="#">车票查询预订</a></li>
       <li><a href="#">退票</a></li>
       <li role="separator" class="divider"></li>
       <li class="dropdown-header"></li>
-      <li><a href="#">我的订单</a></li>
+      <li><a href="#">个人空间</a></li>
     </ul>
   </li>
   {% endif %}
@@ -32,30 +31,28 @@
 </ul>
 {% endblock %}
 {% block body %}
-<div class="form-container jumbotron">
-  {% if err_info %}
-  <div class="alert alert-danger alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    {{ err_info }}
-  </div>
-  {% endif %}
-  <form class="form-signup" action="{{ url_for('signup') }}" method="post">
-    <h2 class="form-signup-heading">Register an account for free!</h2>
-    <label for="inputName" class="sr-only">Your name</label>
-    <input type="text" id="inputName" name="name" class="form-control" placeholder="Your name" pattern="[0-9A-z]+" title="name should only contain digits and letters" required autofocus>
+<div name = "signup-area" class="container-fluid-signup">
+        <div class="row" style="margin-left:5%;">
+            <label style="color:white;margin-top:5%;margin-left:2%;font-size:300%">用户注册</label>
+        </div>
+    <div class="form-container">
+      <form class="form-signup" action="{{ url_for('signup') }}" method="post">
+        <label for="inputName" class="sr-only">Your name</label>
+        <input type="text" id="inputName" name="name" class="form-control" placeholder="姓名" pattern="[0-9A-z]+" title="非法的字符" required autofocus>
 
-    <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="text" id="inputEmail" name="email" class="form-control" placeholder="Email address" pattern="^[A-Za-zd]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$" title="email address" required autofocus>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="text" id="inputEmail" name="email" class="form-control" placeholder="邮箱地址" pattern="^[A-Za-z0-9]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$" title="邮箱地址" required autofocus>
 
-    <label for="inputPhone" class="sr-only">Phone number</label>
-    <input type="text" id="inputPhone" name="phone" class="form-control" placeholder="Phone number" pattern="[0-9]+" title="number should contain digits only"  required autofocus>
+        <label for="inputPhone" class="sr-only">Phone number</label>
+        <input type="text" id="inputPhone" name="phone" class="form-control" placeholder="手机号" pattern="[0-9]+" title="非法的号码"  required autofocus>
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" pattern="[0-9A-z]+" title="password should only contain digits and letters" required>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" pattern="[0-9A-z]+" title="非法的字符" required>
 
-    <label for="irepeatPassword" class="sr-only">Repeat password</label>
-    <input type="password" id="repeatPassword" name="repassword" class="form-control" placeholder="Repeat password" pattern="[0-9A-z]+" title="password should only contain digits and letters" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-  </form>
-</div>
+        <label for="irepeatPassword" class="sr-only">Repeat password</label>
+        <input type="password" id="repeatPassword" name="repassword" class="form-control" placeholder="再次输入密码" pattern="[0-9A-z]+" title="非法的字符" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top:10%;font-size:150%;font-weight:bold;">注册</button>
+      </form>
+    </div>
+ </div>
 {% endblock %}

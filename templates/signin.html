@@ -7,18 +7,17 @@
 {% block navbar_left %}
 <ul class="nav navbar-nav">
   <li><a href="{{ url_for('home') }}">首页</a></li>
-  <li><a href="{{url_for('queryRes')}}">查询</a></li>
+  <li><a href="{{url_for('queryRes')}}">余票查询</a></li>
   <li><a href="https://github.com/KSXGroup/stupidTrainTicketingWebsite">源码</a></li>
   {% if user_name %}
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的车票<span class="caret"></span></a>
     <ul class="dropdown-menu">
-      <li><a href="#">余票查询</a></li>
-      <li><a href="#">车票预订</a></li>
+      <li><a href="#">车票查询预订</a></li>
       <li><a href="#">退票</a></li>
       <li role="separator" class="divider"></li>
       <li class="dropdown-header"></li>
-      <li><a href="#">我的订单</a></li>
+      <li><a href="#">个人空间</a></li>
     </ul>
   </li>
   {% endif %}
@@ -33,15 +32,19 @@
 {% endblock %}
 
 {% block body %}
-<div class="form-container">
-    <form class="form-signin" action="{{ url_for('signin') }}" method="post">
-      <h2 class="form-signin-heading">Log in with your account ID</h2>
-      <label for="inputID" class="sr-only">Account ID</label>
-      <input type="userid" id="inputID" name="userid" class="form-control" placeholder="Account ID" pattern="[0-9]+" title="ID should be an integer" required autofocus>
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" pattern="[0-9A-z]+" title="password should only contain digits and letters" required>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      <p class="signin-hint" style="font-size: 15px;">Don't have an account yet? Register one for free now! <a href="{{ url_for('signup') }}">Sign Up</a></p>
-    </form>
-</div>
+<div class="container-fluid container-fluid-signin">
+    <div class="row" style="margin-left:5%;">
+        <label style="color:white;margin-top:5%;margin-left:2%;font-size:300%">用户登录</label>
+    </div>
+    <div class="form-container">
+        <form class="form-signin" action="{{ url_for('signin') }}" method="post">
+          <label for="inputID" class="sr-only">Account ID</label>
+          <input type="userid" id="inputID" name="userid" class="form-control" placeholder="用户ID" pattern="[0-9]+" title="只能输入数字" required autofocus>
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" title="非法的字符" required>
+          <button class="btn btn-lg btn-primary btn-block" style="margin-top:5%" type="submit">登录</button>
+          <p class="signin-hint" style="font-size: 20px; color:white">如果还没有帐号，您可以在这里注册<a href="{{ url_for('signup') }}">注册</a></p>
+        </form>
+    </div>
+ </div>
 {% endblock %}

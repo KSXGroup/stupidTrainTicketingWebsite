@@ -1,17 +1,24 @@
 
+.container-fluid-signup{
+    background-color: rgba(0,0,0,0.2);
+    max-width:800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
 .form-container {
-  width: 100%;
-  height: 20%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 100px;
+  padding:5%;
+  background-color:rgba(0,0,0,0);
 }
 
 .form-signup {
-  max-width: 450px;
-  padding: 20px;
-  margin: auto;
+  max-width: 80%;
+  margin: 0 auto;
 }
+
 .form-signup .form-signup-heading,
 .form-signup .checkbox {
   margin-bottom: 10px;
@@ -26,14 +33,21 @@
      -moz-box-sizing: border-box;
           box-sizing: border-box;
   padding: 10px;
-  font-size: 16px;
+  font-size: 150%;
+
 }
+
+
 .form-signup .form-control:focus {
   z-index: 2;
 }
 
 .form-signup input {
   margin-bottom: 10px;
+  background-color:rgba(0,0,0,0);
+  border-width:3px;
+  border-color:white;
+  color:white;
 }
 
 
@@ -46,11 +60,34 @@
 .btn:focus,
 .btn:hover,
 .btn:active{
-    border-color: white;
-    background-color: rgba(0,0,0,0.3);
+    border-color: rgba(255,255,255,1);
+    background-color: rgba(255,255,255,1);
+    color: black;
 }
 
 .btn:active:focus{
     border-color: white;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,1);
 }
+
+
+input::input-placeholder{
+    color:  #F4F1F1 !important;
+}
+
+::-webkit-input-placeholder{
+       color:#F4F1F1 !important;
+   }
+ :-moz-placeholder {/* Firefox 18- */
+       color:#F4F1F1 !important;
+   }
+
+
+ ::-moz-placeholder{/* Firefox 19+ */
+       color:#F4F1F1  !important;
+   }
+
+ :-ms-input-placeholder {
+       color:#F4F1F1 !important;
+  }
+

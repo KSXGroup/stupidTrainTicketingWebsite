@@ -1,0 +1,26 @@
+.sidebar-nav {
+    padding: 20px 0px;
+    background-color:rgba(0,0,0,0.2);
+ }
+
+.nav-header{
+    margin-left:5%;
+    color:white;
+    font-size:150%;
+    margin-left:15%;
+}
+.nav-list > li > a{
+    color:white;
+    font-size:120%;
+}
+
+.nav-list > li > a:hover,
+.nav-list > li > a:focus{
+    color:black;
+    background-color: white;
+}
+
+.li-focus{
+    color:black;
+    background-color: white;
+}

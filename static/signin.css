@@ -1,8 +1,15 @@
+.container-fluid-signin{
+    background-color: rgba(0,0,0,0.2);
+    max-width:600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
 .form-container {
-  max-width: 450px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 50px;
+  background-color: rgba(0,0,0,0);
 }
 
 .signin-hint {
@@ -10,7 +17,7 @@
 }
 
 .form-signin {
-  max-width: 330px;
+  max-width: 400px;
   padding: 15px;
   margin: 0 auto;
 }
@@ -28,7 +35,7 @@
      -moz-box-sizing: border-box;
           box-sizing: border-box;
   padding: 10px;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .form-signin .form-control:focus {
@@ -46,6 +53,14 @@
   border-top-right-radius: 0;
 }
 
+.form-signin input{
+    margin-bottom: 10px;
+    background-color:rgba(0,0,0,0);
+    border-width:3px;
+    border-color:white;
+    color:white;
+}
+
 .btn{
     background-color: rgba(255,255,255,0) ;
     border-color: rgba(255,255,255,1);
@@ -55,14 +70,35 @@
 .btn:focus,
 .btn:hover,
 .btn:active{
-    border-color: white;
-    background-color: rgba(0,0,0,0.3);
+    border-color: rgba(255,255,255,1);
+    background-color: rgba(255,255,255,1);
+    color: black;
 }
 
 .btn:active:focus{
     border-color: white;
     background-color: rgba(0,0,0,0.4);
 }
+
+input::input-placeholder{
+    color:  #F4F1F1 !important;
+}
+
+::-webkit-input-placeholder{
+       color:#F4F1F1 !important;
+   }
+ :-moz-placeholder {/* Firefox 18- */
+       color:#F4F1F1 !important;
+   }
+
+
+ ::-moz-placeholder{/* Firefox 19+ */
+       color:#F4F1F1  !important;
+   }
+
+ :-ms-input-placeholder {
+       color:#F4F1F1 !important;
+  }
 
 
 
