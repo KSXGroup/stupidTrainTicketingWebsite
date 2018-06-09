@@ -1,8 +1,7 @@
 body{
-    background: url("../static/bg.jpg") no-repeat center center fixed;
+    background: url("../static/bg4.jpg") no-repeat center center fixed;
     background-size: 100%  ;
     animation-name:myfirst;
-    animation-timing-function: ease-in-out;
     animation-duration:12s;
     /*变换时间*/
     animation-delay:2s;
@@ -15,11 +14,11 @@ body{
 @keyframes myfirst
 {
     0%   {
-    background:url("/static/bg.jpg") no-repeat center center fixed;
+    background:url("/static/bg4.jpg") no-repeat center center fixed;
     background-size: 100% ;
     }
     34%  {
-    background:url("/static/bg1.jpg") no-repeat center center fixed;
+    background:url("/static/bg3.jpg") no-repeat center center fixed;
     background-size: 100%;
     }
     67%  {
@@ -27,7 +26,7 @@ body{
     background-size: 100% ;
     }
     100% {
-    background:url("/static/bg.jpg")no-repeat center center fixed;
+    background:url("/static/bg4.jpg")no-repeat center center fixed;
     background-size: 100% ;
     }
 }

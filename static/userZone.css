@@ -51,15 +51,16 @@
 .panel-group > .panel-transparent {
     background-color:none !important;
     border-radius:0px !important;
+    border:0px;
 }
 
 .panel-group > .panel-transparent > .panel-heading{
     background:rgba(0,0,0,0.4) !important;
     border-radius: 0px;
+    border:0px;
 }
 
-.panel-group > .panel-transparent > .panel-collapse > .panel-body{
-    border-radius:0px;
+.panel-group > .panel-transparent > .panel-collapse > .panel-body {
     background:rgba(0,0,0,0.2) !important;
     border:0px;
 }

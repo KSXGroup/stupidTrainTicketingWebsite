@@ -195,7 +195,11 @@ def signup():
             session['home_success_info'] = 'Registration successful! Your account ID is %s.' % (userid)
             return redirect(url_for('home'))
     else:
-        return render_template('signup.html', user_name = session['user_name'])
+        if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
+            user_name = session['user_name']
+        else:
+            user_name = None
+        return render_template('signup.html', user_name = user_name)
 
 @app.route('/signout', methods=['GET'])
 def signout():
@@ -248,7 +252,13 @@ def settings():
 @app.route('/orderTic', methods=['POST', 'GET'])
 def orderTic():
     if request.method == 'POST':
-        if session['user_id'] != "":
+        if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
+            user_name = session['user_name']
+            user_id = session['user_id']
+        else:
+            user_name = None
+            user_id = None
+        if user_id != "":
             if request.form['form-name'] == "sorder":
                 order_trainid = request.form['order-train-id']
                 order_loc1 = request.form['order-loc1']
@@ -291,7 +301,9 @@ def userZone():
         else:
             user_name = None
             user_id = None
-        return render_template('userZone.html',  user_name = user_name, user_id = str(user_id) , current_time = timeTuple[0], final_time = timeTuple[1])
+        retStatus = request.args.get('status')
+        if retStatus == "" or retStatus == " " or retStatus == None: return render_template('userZone.html',  user_name = user_name, user_id = str(user_id) , current_time = timeTuple[0], final_time = timeTuple[1], status = "welcome")
+        else: return render_template('userZone.html',  user_name = user_name, user_id = str(user_id) , current_time = timeTuple[0], final_time = timeTuple[1], status = retStatus)
     if request.method == 'POST':
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
             user_name = session['user_name']

@@ -35,10 +35,11 @@
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user_name }}<span class="caret"></span></a>
     <ul class="dropdown-menu">
-    <li><a href="{{ url_for('profile') }}">用户信息</a></li>
+      <li><a href="{{url_for('queryRes')}}">车票查询预订</a></li>
+      <li><a href="{{url_for('userZone')}}?status=openQueryOrder">订单操作</a></li>
       <li role="separator" class="divider"></li>
-      <li><a href="{{ url_for('settings') }}">修改信息</a></li>
-      <li><a href="{{ url_for('signout') }}">注销</a></li>
+      <li class="dropdown-header"></li>
+      <li><a href="{{url_for('userZone')}}">个人空间</a></li>
     </ul>
   </li>
 </ul>
@@ -75,10 +76,6 @@
 </div>
 {% endif %}
 
-<div name="query-order" class="hidden">
-     <div class="col-md-10" style="margin-left:-15px;">
-     </div>
-</div>
 
 <div name="welcome-msg-template" class="hidden">
      <div class="col-md-10 col-lg-10 col-sm-9" style="margin-left:-15px;">
@@ -94,35 +91,35 @@
  </div>
 
 <div name = "order-info-template" class = "hidden">
-    <div class="col-md-10" style="margin-left:-15px;">
+    <div class="col-md-10 col-sm-9 col-lg-10" style="margin-left:-15px;">
         <div class = "container-fluid user-container">
            <h2 style="color:white" name="order_num">您的订单信息共有[ORDER_NUM]条</h2>
         </div>
-        <div name="all_order" style="margin-top:1%" class = "panel-group">
+        <div name="all-order" style="margin-top:1%" class = "panel-group">
         </div>
     </div>
 </div>
 
-<div class="panel panel-transparent hidden" id="[pos]" name="panel-template">
-    <div class="panel-heading center-block">
-        <div class = "row center-block text-center" data-toggle="collapse" data-parent="#accordion" href="#[gpos]">
-            <h2 class="col-lg-2 col-md-2 col-sm-2">[train-name]</h2>
-            <h3 class="col-lg-4 col-md-4 col-sm-4">
-                [order-loc1] [order-date1] [order-time1]
-            </h3>
-            <h3 class="col-lg-4 col-md-4 col-sm-4">
-                [order-loc2] [order-date2] [order-time2]
-            </h3>
+<div class="hidden" name="panel-template">
+    <div class="panel panel-transparent" id="1-gpos">
+        <div class="panel-heading center-block">
+            <div class = "row center-block text-center" data-toggle="collapse" data-parent="#accordion" href="#gpos">
+                <h2 class="col-lg-2 col-md-2 col-sm-2">[train-name]</h2>
+                <h3 class="col-lg-5 col-md-5 col-sm-5">
+                    [order-loc1] [order-date1] [order-time1]
+                </h3>
+                <h3 class="col-lg-5 col-md-5 col-sm-5">
+                    [order-loc2] [order-date2] [order-time2]
+                </h3>
+            </div>
         </div>
-    </div>
-    <div name="panel-body-area">
-        <div id="[gpos]" class="panel-collapse collapse in">
+        <div id="gpos" class="panel-collapse collapse in">
             <div class="panel-body">
                 <div class="row text-center center-block">
                     <h4 class = "col-md-2 col-md-offset-2 col-lg-2 col-lg-offset-2 col-sm-2 col-sm-offset-2" style="font-size:150%">[tic-type]</h4>
-                    <h4 class = "col-md-4 col-lg-4 col-sm-4" style="font-size:150%">[tic_num]张</h4>
-                    <h4 class = "col-md-4 col-lg-4 col-sm-4" style="font-size:150%">¥[tot_price]</h4>
-                    <button class="btn btn-normal btn-refund" id="[gpos-tictypepos]">退订</button>
+                    <h4 class = "col-md-2 col-lg-2 col-sm-2" style="font-size:150%">[order-num]张</h4>
+                    <h4 class = "col-md-4 col-lg-4 col-sm-4" style="font-size:150%">¥[tot-price]</h4>
+                    <button class="btn btn-normal btn-refund" id=" [gpos-tictypepos] ">退订</button>
                 </div>
             </div>
         </div>
@@ -149,10 +146,13 @@
     }
 
     function addOrdersInfoToPage(){
+        $(document.getElementsByName("main-content")[0]).empty()
         orderCount = orderData[0];
-        panelHandle = document.getElementsByName("all_order")[0];
         var orderTrainId, orderType, orderLoc1, orderLoc2, orderTime1, orderTime2, orderTrainName, orderDate1, orderDate2, orderNum, orderTotPrice, currentOrderData;
-        document.getElementsByName("order_num")[0].innerHTML = '您的订单信息共有' + orderCount + '条';
+        document.getElementsByName("order_num")[0].innerHTML = '您的订单信息共有' + orderCount + '条' + ',点击可以查看详情';
+        var myobj = document.getElementsByName("order-info-template")[0].innerHTML;
+        myobj = myobj.replace('all-order', {{user_id}});
+        $(document.getElementsByName("main-content")[0]).append(myobj);
         for(var i = 1; i < orderData.length; ++i){
             currentOrderData = orderData[i];
             orderTrainId = currentOrderData[0];
@@ -163,15 +163,28 @@
             orderDate2 = currentOrderData[5];
             orderTime1 = currentOrderData[3];
             orderTime2 = currentOrderData[6];
-            for(var j = 7; j < currentOrderData.length - 1; ++j){
+            for(var j = 7; j < currentOrderData.length - 1; j += 3){
                 orderType = currentOrderData[j];
-                ++j;
-                if(currentOrderData[j] != "0"){
-                    orderNum = parseInt(currentOrderData[j]);
-                    orderTotPrice = orderNum * parseFloat(currentOrderData[j + 1]);
+                if(currentOrderData[j + 1] != "0"){
+                    orderNum = parseInt(currentOrderData[j + 1]);
+                    orderTotPrice = (orderNum * parseFloat(currentOrderData[j + 2])).toFixed(2);
                     break;
                 }
             }
+            targetHTML = document.getElementsByName("panel-template")[0].innerHTML;
+            targetHTML = targetHTML.replace(/gpos/g, "collapse" + i.toString());
+            targetHTML = targetHTML.replace('[tic-type]', orderType)
+            targetHTML = targetHTML.replace('[train-name]', orderTrainName);
+            targetHTML = targetHTML.replace('[order-loc1]', orderLoc1);
+            targetHTML = targetHTML.replace('[order-loc2]', orderLoc2);
+            targetHTML = targetHTML.replace('[order-time1]', orderTime1);
+            targetHTML = targetHTML.replace('[order-time2]', orderTime2);
+            targetHTML = targetHTML.replace('[order-date1]', orderDate1);
+            targetHTML = targetHTML.replace('[order-date2]', orderDate2);
+            targetHTML = targetHTML.replace('[order-num]', orderNum);
+            targetHTML = targetHTML.replace('[tot-price]', orderTotPrice);
+            $(document.getElementsByName("{{user_id}}")[0]).append(targetHTML);
+            $('#'+"collapse" + i.toString()).collapse('hide');
         }
     }
 
@@ -182,6 +195,25 @@
         for(var i = st; i < trainId.length - 2; ++i) trainNameTmp += trainId[i];
         return trainNameTmp;
     }
+
+    function loadWelcome(){
+        $(document.getElementsByName("main-content")[0]).append(document.getElementsByName("welcome-msg-template")[0].innerHTML);
+    }
+
+
+    {% if status == "welcome" %}
+    $(document).ready(function(){
+        loadWelcome();
+        }
+    );
+    {% endif %}
+
+    {% if status == "openQueryOrder"}
+    $(document).ready(function(){
+        addOrdersInfoToPage();
+    }
+    );
+    {% endif %}
 </script>
 
 {% endblock %}

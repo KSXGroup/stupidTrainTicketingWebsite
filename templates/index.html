@@ -13,11 +13,11 @@
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的车票<span class="caret"></span></a>
     <ul class="dropdown-menu">
-      <li><a href="#">车票查询预订</a></li>
-      <li><a href="#">退票</a></li>
+      <li><a href="{{url_for('queryRes')}}">车票查询预订</a></li>
+      <li><a href="{{url_for('userZone')}}?status=openQueryOrder">订单操作</a></li>
       <li role="separator" class="divider"></li>
       <li class="dropdown-header"></li>
-      <li><a href="#">个人空间</a></li>
+      <li><a href="{{url_for('userZone')}}">个人空间</a></li>
     </ul>
   </li>
   {% endif %}
