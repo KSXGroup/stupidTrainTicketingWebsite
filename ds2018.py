@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request, render_template, abort, redirect, url_for, session
+from datetime import datetime, timedelta
 from subprocess import Popen, PIPE, STDOUT
 import fcntl, os, json, re
 import pdb
@@ -59,6 +60,47 @@ def db_communicate(cmd):
         print(cmd)
         print(res)
         return res
+
+def getDateStrings():
+    ret =  []
+    a = datetime.utcnow()
+    a += timedelta(hours=8)
+    a1 = a + timedelta(days=30)
+    s = str(a.year) + "年" + str(a.month) + "月" + str(a.day) + "日"
+    s1 = str(a1.year) + "年" + str(a1.month) + "月" + str(a1.day) + "日"
+    ret.append(s)
+    ret.append(s1)
+    return ret
+
+def getAllorder(userid, catalog):
+    currentDate = datetime.utcnow() + timedelta(hours=8)
+    ret = []
+    for i in range(1,31):
+        syear = str(currentDate.year)
+        smonth = str(currentDate.month)
+        sday = str(currentDate.day)
+        if len(smonth) == 1: smonth = '0' + smonth
+        if len(sday) == 1: sday = '0' + sday
+        datetmp = syear + '-' + smonth + '-' + sday
+        cmdtmp = ' '.join(['query_order',str(userid), datetmp, str(catalog)])
+        res = db_communicate(cmdtmp)
+        tmptable = re.split(r'\n', res)
+        if tmptable[len(tmptable) - 1] == "": tmptable.pop()
+        if tmptable[0] == "0":
+            currentDate += timedelta(days = 1)
+            continue
+        print(tmptable)
+        if len(ret) > 0 :
+            ret[0]  = int(ret[0]) + int(tmptable[0])
+            for j in range(1, len(tmptable)):
+                ret.append(tmptable[j])
+        else:
+            ret  = tmptable
+        currentDate += timedelta(days = 1)
+    print(ret)
+    for i in range(1, len(ret)):
+        ret[i] = re.split(r' ', ret[i])
+    return ret
 
 
 @app.route('/index', methods=['GET'])
@@ -242,7 +284,21 @@ def orderTic():
 @app.route('/userZone', methods=['GET', 'POST'])
 def userZone():
     if request.method == 'GET':
-        return render_template('userZone.html', user_id = session['user_id'], user_name = session['user_name'])
+        timeTuple = getDateStrings()
+        if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
+            user_name = session['user_name']
+            user_id = session['user_id']
+        else:
+            user_name = None
+            user_id = None
+        return render_template('userZone.html',  user_name = user_name, user_id = str(user_id) , current_time = timeTuple[0], final_time = timeTuple[1])
+    if request.method == 'POST':
+        if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
+            user_name = session['user_name']
+            user_id = session['user_id']
+            return json.dumps(getAllorder(user_id, 'CDGKTZO'))
+        else:
+            return json.dumps("0")
 
 @app.route('/debugger', methods=['GET', 'POST'])
 def debugger():
@@ -250,11 +306,9 @@ def debugger():
         order = request.form['order']
         if len(order.strip('\n')) == 0:
             return render_template("debugger.html")
-        print(order)
         res = ""
         if order != "":
             res = db_communicate(order)
-            print(res)
         return render_template("debugger.html")
     else:
         return render_template("debugger.html")

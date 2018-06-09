@@ -47,35 +47,144 @@
 
 
 {% block body %}
+{% if user_name and user_id %}
 <div class="row-fluid" style="margin-left:-15px;">
-    <div class="col-md-2" style="margin-left:-15px;">
+    <div class="col-md-2 col-sm-3 col-lg-2 visible-sm visible-md visible-lg" style="margin-left:-15px;">
         <div class="sidebar-nav">
             <ul class="nav nav-list">
                 <li class="nav-header" style="font-weight:bold">车票操作</li>
-                <li class="active">
-                    <a href="javascript:void(0)" onclick="">订单查询</a></li>
-                <li style="margin-bottom:3%;">
-                    <a href="javascript:void(0)" onclicl="">车票退订</a></li>
-
+                <li class="active" style="margin-bottom:3%;margin-top:3%;">
+                    <a href="javascript:void(0)" onclick="openQueryOrder()">订单查询/退订</a></li>
                 <li class="nav-header" style="font-weight:bold">用户操作</li>
                 <li style="margin-top:3%;">
-                    <a href="javascript:void(0)" onclick="">个人信息</a></li>
+                    <a href="javascript:void(0)" onclick="openQueryProfile()">个人信息</a></li>
                 <li>
                     <a href="javascript:void(0)" onclick="">修改密码</a></li>
             </ul>
         </div>
     </div>
+    <div name = "main-content">
+    </div>
+</div>
+{% else %}
+<div class = "container-fluid text-center" style="background-color:rgba(0,0,0,0.2);width:80%;margin-top:15%;padding:2.5%">
+    <div class="row">
+        <i class="glyphicon glyphicon-remove-circle col-md-4" style="margin-top:2%;font-size:600%;color:white;margin-left:10%"></i>
+        <h1 style="color:white; margin-top:4%;font-size:350%; margin-left:-10%;" class="col-md-5">请先登录</h1>
+    </div>
+</div>
+{% endif %}
+
+<div name="query-order" class="hidden">
+     <div class="col-md-10" style="margin-left:-15px;">
+     </div>
+</div>
+
+<div name="welcome-msg-template" class="hidden">
+     <div class="col-md-10 col-lg-10 col-sm-9" style="margin-left:-15px;">
+         <div class="container-fluid user-container">
+             <h1 style="color:white">欢迎回来,{{user_name}}</h1>
+             <div class = "row-fluid" style = "margin-top:5%">
+                 <li class = "glyphicon glyphicon-info-sign col-md-1" style="color:white;font-size:450%;margin-right:4%;"></li>
+                 <h3 class="row-fluid col-md-offset-1" style = "color:white">今天是<strong>{{current_time}}</strong></h3>
+                 <h3 class="row-fluid col-md-offset-1" style = "color:white">您可以购买<strong>{{final_time}}</strong>以内的车票</h3>
+             </div>
+         </div>
+     </div>
+ </div>
+
+<div name = "order-info-template" class = "hidden">
     <div class="col-md-10" style="margin-left:-15px;">
-        <div class="container-fluid">
+        <div class = "container-fluid user-container">
+           <h2 style="color:white" name="order_num">您的订单信息共有[ORDER_NUM]条</h2>
+        </div>
+        <div name="all_order" style="margin-top:1%" class = "panel-group">
         </div>
     </div>
 </div>
+
+<div class="panel panel-transparent hidden" id="[pos]" name="panel-template">
+    <div class="panel-heading center-block">
+        <div class = "row center-block text-center" data-toggle="collapse" data-parent="#accordion" href="#[gpos]">
+            <h2 class="col-lg-2 col-md-2 col-sm-2">[train-name]</h2>
+            <h3 class="col-lg-4 col-md-4 col-sm-4">
+                [order-loc1] [order-date1] [order-time1]
+            </h3>
+            <h3 class="col-lg-4 col-md-4 col-sm-4">
+                [order-loc2] [order-date2] [order-time2]
+            </h3>
+        </div>
+    </div>
+    <div name="panel-body-area">
+        <div id="[gpos]" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <div class="row text-center center-block">
+                    <h4 class = "col-md-2 col-md-offset-2 col-lg-2 col-lg-offset-2 col-sm-2 col-sm-offset-2" style="font-size:150%">[tic-type]</h4>
+                    <h4 class = "col-md-4 col-lg-4 col-sm-4" style="font-size:150%">[tic_num]张</h4>
+                    <h4 class = "col-md-4 col-lg-4 col-sm-4" style="font-size:150%">¥[tot_price]</h4>
+                    <button class="btn btn-normal btn-refund" id="[gpos-tictypepos]">退订</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var orderData;
+    function openQueryOrder(){
+        var uid = '{{user_id}}';
+        $.ajax({
+          type: 'POST',
+          url: '{{url_for("userZone")}}',
+          data: "{{user_id}}",
+          success: function(data){
+            orderData = data;
+            addOrdersInfoToPage();
+          },
+          dataType: 'json',
+          processData: false,
+          contentType: false
+        });
+    }
+
+    function addOrdersInfoToPage(){
+        orderCount = orderData[0];
+        panelHandle = document.getElementsByName("all_order")[0];
+        var orderTrainId, orderType, orderLoc1, orderLoc2, orderTime1, orderTime2, orderTrainName, orderDate1, orderDate2, orderNum, orderTotPrice, currentOrderData;
+        document.getElementsByName("order_num")[0].innerHTML = '您的订单信息共有' + orderCount + '条';
+        for(var i = 1; i < orderData.length; ++i){
+            currentOrderData = orderData[i];
+            orderTrainId = currentOrderData[0];
+            orderTrainName = trainIdToName(orderTrainId);
+            orderLoc1 = currentOrderData[1];
+            orderLoc2 = currentOrderData[4];
+            orderDate1 = currentOrderData[2];
+            orderDate2 = currentOrderData[5];
+            orderTime1 = currentOrderData[3];
+            orderTime2 = currentOrderData[6];
+            for(var j = 7; j < currentOrderData.length - 1; ++j){
+                orderType = currentOrderData[j];
+                ++j;
+                if(currentOrderData[j] != "0"){
+                    orderNum = parseInt(currentOrderData[j]);
+                    orderTotPrice = orderNum * parseFloat(currentOrderData[j + 1]);
+                    break;
+                }
+            }
+        }
+    }
+
+    function trainIdToName(trainId){
+        var pattern = /[CDGKTZ][0-9A-Z]*/;
+        var st = trainId.search(pattern);
+        var trainNameTmp = "";
+        for(var i = st; i < trainId.length - 2; ++i) trainNameTmp += trainId[i];
+        return trainNameTmp;
+    }
+</script>
+
 {% endblock %}
-
-
-
-
-
 
 
 

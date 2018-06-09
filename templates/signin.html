@@ -38,9 +38,7 @@
     </div>
     <div class="form-container">
         <form class="form-signin" action="{{ url_for('signin') }}" method="post">
-          <label for="inputID" class="sr-only">Account ID</label>
           <input type="userid" id="inputID" name="userid" class="form-control" placeholder="用户ID" pattern="[0-9]+" title="只能输入数字" required autofocus>
-          <label for="inputPassword" class="sr-only">Password</label>
           <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" title="非法的字符" required>
           <button class="btn btn-lg btn-primary btn-block" style="margin-top:5%" type="submit">登录</button>
           <p class="signin-hint" style="font-size: 20px; color:white">如果还没有帐号，您可以在这里注册<a href="{{ url_for('signup') }}">注册</a></p>

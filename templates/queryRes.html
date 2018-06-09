@@ -63,7 +63,7 @@
             <input class="col-md-1 col-sm-1 col-xs-1 input-md form-control" name="loc1" placeholder="始发站" type="text">
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1 input-md form-control" name="loc2" placeholder="到达站" type="text">
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1  input-md form-control" id="mytimepicker" name="ddate" placeholder="日期" type="text">
-            <input class="sr-only" type="text" value="queryRes" name = "id">
+            <input class="hidden" type="text" value="queryRes" name = "id">
             <button class="btn-lg btn-search glyphicon glyphicon-search col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1" type="button" onclick="queryTicket()"></button>
         </div>
     </form>
@@ -71,7 +71,7 @@
 <div id="bryan">
 </div>
 
-<div name="block-template" class= "sr-only">
+<div name="block-template" class= "hidden">
     <div class = "container-fluid">
         <div class = "row">
             <div class="text-center"><label class="col-lg-2 col-md-2 col-sm-2" style = "font-size:180%" id = "ID_TRAIN_ID">TRAIN-ID</label></div>
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-<div name="ticket_template"  class="sr-only">
+<div name="ticket_template"  class="hidden">
     <div class="row" style="font-size:80%; margin-left:-5%">
         <label style="font-size:80%">TIC_TYPE</label>
         <label style="font-size:100%">TIC_PRICE</label>
@@ -100,7 +100,7 @@
     </div>
 </div>
 
-<form name="order_template" class="sr-only" action = "{{url_for('orderTic')}}" method = "POST">
+<form name="order_template" class="hidden" action = "{{url_for('orderTic')}}" method = "POST">
     <input name = "form-name" value = "sorder">
     <input name = "order-train-id" type = "text" value = "ORDER_TRAIN_ID">
     <input name = "order-loc1" type = "text" value = "ORDER_LOC1">
