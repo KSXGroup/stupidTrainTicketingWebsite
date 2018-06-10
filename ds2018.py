@@ -205,6 +205,8 @@ def signup():
 def signout():
     if 'user_id' in session:
         session.pop('user_id', None)
+    if 'user_name' in session:
+        session.pop('user_name', None)
     return redirect(url_for('home'))
 
 """
@@ -291,6 +293,36 @@ def orderTic():
         err_info = "禁止访问"
         return render_template('orderTic.html', err_info = err_info)
 
+@app.route('/refundTic', methods=['GET', 'POST'])
+def refundTic():
+    if request.method == 'POST':
+        if 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
+            if 'form-name' in request.form:
+                    if request.form['form-name'] == "refundForm":
+                        train_id = request.form['refundTrainId']
+                        tic_type = request.form['refundTicType']
+                        tic_date = request.form['refundDate']
+                        tic_loc1 = request.form['refundLoc1']
+                        tic_loc2 = request.form['refundLoc2']
+                        tic_num = request.form['refundNum']
+                        tic_price = request.form['refundTotPrice']
+                        return render_template('refundTic.html',user_name = session['user_name'], user_id = session['user_id'], train_id = train_id, tic_type = tic_type, tic_date = tic_date, tic_loc1 = tic_loc1, tic_loc2 = tic_loc2, tic_num = tic_num, tic_price = tic_price)
+                    else:
+                        if request.form['form-name'] == 'confirmRefundForm':
+                            train_id = request.form['refund-train-id']
+                            tic_type = request.form['refund-type']
+                            tic_date = request.form['refund-date']
+                            tic_loc1 = request.form['refund-loc1']
+                            tic_loc2 = request.form['refund-loc2']
+                            tic_num = request.form['refund-num']
+                            return json.dumps(db_communicate(' '.join(['refund_ticket', session['user_id'], tic_num,train_id, tic_loc1, tic_loc2, tic_date, tic_type])))
+
+            else:
+                  return render_template('refundTic.html', err_info="无效的参数")
+        else: return render_template('refundTic.html', err_info="登录状态错误")
+    else:
+        return render_template('refundTic.html', err_info = "禁止访问")
+
 
 
 @app.route('/userZone', methods=['GET', 'POST'])
@@ -310,21 +342,49 @@ def userZone():
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
             user_name = session['user_name']
             user_id = session['user_id']
-            return json.dumps(getAllorder(user_id, 'CDGKTZO'))
+            return json.dumps(getAllorder(user_id, 'GKTZO'))
         else:
             return json.dumps("0")
 
 @app.route('/userOperator', methods=['POST'])
 def userOperator():
-    if request.method == 'POST':
-        reqData = json.loads(request.form.get('data'))
-        rqn  = reqData['requestName']
-        if rqn == 'query_profile':
-            uid = reqData['userId']
-            print(rqn + ' ' + uid)
-            rs = db_communicate(' '.join(['query_profile', uid]))
-            ret = re.split(r' ', rs)
-            return json.dumps(ret)
+    if request.method == 'POST' and 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
+        if 'data' in request.form:
+            reqData = json.loads(request.form.get('data'))
+            rqn  = reqData['requestName']
+            if rqn == 'query_profile':
+                uid = reqData['userId']
+                print(rqn + ' ' + uid)
+                rs = db_communicate(' '.join(['query_profile', uid]))
+                ret = re.split(r' ', rs)
+                return json.dumps(ret)
+        else:
+            if 'userNameText' in request.form and 'user_id' in session and session['user_id'] != '' and session['user_id'] != None:
+                tmpUserName = request.form['userNameText']
+                tmpUserEmail = request.form['userEmailText']
+                tmpUserPhone = request.form['userPhoneText']
+                tmpUserPassword = request.form['userPasswordText']
+                if int(db_communicate(' '.join(['login', session['user_id'], tmpUserPassword]))) == 0: return json.dumps("0")
+                else:
+                    mdcmd = ' '.join(['modify_profile', session['user_id'], tmpUserName, tmpUserPassword, tmpUserEmail, tmpUserPhone])
+                    ret = db_communicate(mdcmd)
+                    if int(ret) == 1:
+                        session['user_name'] = tmpUserName
+                        return json.dumps(ret)
+                    else:
+                        return json.dumps("0")
+            if 'userOldPasswordText' in request.form:
+                 oldpwd = request.form['userOldPasswordText']
+                 newpwd = request.form['userNewPasswordText']
+                 newrpwd = request.form['userNewRepasswordText']
+                 if newpwd != newrpwd: return json.dumps("0")
+                 if int(db_communicate(' '.join(['login', session['user_id'], oldpwd]))) == 0: return json.dumps("0")
+                 else:
+                      usrInfo = re.split(r' ', db_communicate(' '.join(['query_profile', session['user_id']])))
+                      mdcmd = ' '.join(['modify_profile', session['user_id'], usrInfo[0] , newrpwd, usrInfo[1], usrInfo[2]])
+                      if int(db_communicate(mdcmd)) == 1: return json.dumps("1")
+                      else: json.dumps("0")
+
     else: return json.dumps("0")
 
 @app.route('/debugger', methods=['GET', 'POST'])

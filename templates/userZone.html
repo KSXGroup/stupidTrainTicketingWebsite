@@ -58,9 +58,9 @@
                     <a href="javascript:void(0)" onclick="openQueryOrder()">订单查询/退订</a></li>
                 <li class="nav-header" style="font-weight:bold">用户操作</li>
                 <li style="margin-top:3%;">
-                    <a href="javascript:void(0)" onclick="openQueryProfile()">个人信息</a></li>
+                    <a href="javascript:void(0)" onclick="loadUserInfo()">个人信息</a></li>
                 <li>
-                    <a href="javascript:void(0)" onclick="">修改密码</a></li>
+                    <a href="javascript:void(0)" onclick="loadChangePassword()">修改密码</a></li>
             </ul>
         </div>
     </div>
@@ -119,7 +119,7 @@
                     <h4 class = "col-md-2 col-md-offset-2 col-lg-2 col-lg-offset-2 col-sm-2 col-sm-offset-2" style="font-size:150%">[tic-type]</h4>
                     <h4 class = "col-md-2 col-lg-2 col-sm-2" style="font-size:150%">[order-num]张</h4>
                     <h4 class = "col-md-4 col-lg-4 col-sm-4" style="font-size:150%">¥[tot-price]</h4>
-                    <button class="btn btn-normal btn-refund" id=" [gpos-tictypepos] ">退订</button>
+                    <button class="btn btn-normal btn-refund" id="gpos-tictypepos" onclick="refundTic(this)">退订</button>
                 </div>
             </div>
         </div>
@@ -129,32 +129,36 @@
 <div class = "hidden" name = "userInfo-template">
     <div class = "col-md-10 col-lg-10 col-sm-9 container-fluid userinfo">
         <h1 style="color:white">用户信息</h1>
-        <form role="form">
+        <form role="form" name = "userInfoForm">
             <div class="row" style="margin-top:4%;">
-                <label class = "col-md-offset-3 col-md-2">用户ID:</label>
-                <label class = "col-md-4" name="userIDLabel">{{user_id}}</label>
+                <label class = "col-md-offset-3 col-md-2 col-sm-offset-3 col-sm-3">用户ID:</label>
+                <label class = "col-md-4 col-sm-4 col-lg-4" name="userIDLabel">{{user_id}}</label>
             </div>
             <div class="row" style="margin-top:2%;">
-                <label class = "col-md-offset-3 col-md-2 ">用户名:</label>
-                <label class = "col-md-4" name="userNameLabel">{{user_name}}</label>
-                <input class = "col-md-4 hidden form-control" name="userNameText" value="{{user_name}}"></input>
+                <label class = "col-md-offset-3 col-md-2  col-sm-offset-3 col-sm-3">用户名:</label>
+                <label class = "col-md-4  col-sm-4 col-lg-4" name="userNameLabel">{{user_name}}</label>
+                <input class = "col-md-4 hidden form-control" name="userNameText" value="{{user_name}}">
             </div>
             <div class="row" style="margin-top:2%;">
-                <label class = "col-md-offset-3 col-md-2 ">邮箱:</label>
-                <label class = "col-md-4" name="userEmailLabel">user-mail</label>
-                <input class = "col-md-4 hidden form-control" name="userEmailText" value="user-mail"></input>
+                <label class = "col-md-offset-3 col-md-2  col-sm-offset-3 col-sm-3">邮箱:</label>
+                <label class = "col-md-4  col-sm-4 col-lg-4" name="userEmailLabel">user-mail</label>
+                <input class = "col-md-4 hidden form-control" name="userEmailText" value="user-mail">
             </div>
             <div class="row" style="margin-top:2%;">
-                <label class = "col-md-offset-3 col-md-2 ">手机号:</label>
-                <label class = "col-md-4" name="userPhoneLabel">user-phone</label>
-                <input class = "col-md-4 hidden form-control" name="userPhoneText" value="user-phone"></input>
+                <label class = "col-md-offset-3 col-md-2  col-sm-offset-3 col-sm-3">手机号:</label>
+                <label class = "col-md-4  col-sm-4 col-lg-4" name="userPhoneLabel">user-phone</label>
+                <input class = "col-md-4 hidden form-control" name="userPhoneText" pattern="[0-9]+" value="user-phone">
+            </div>
+            <div class="row hidden" name="rowPassword" style="margin-top:2%;">
+                <label class = "col-md-offset-3 col-md-2  col-sm-offset-3 col-sm-3">密码验证:</label>
+                <input class = "col-md-4 form-control  col-sm-4 col-lg-4" name="userPasswordText" type="password">
             </div>
             <div class="row" name="editButtonRow" style="margin-bottom:4%;margin-top:4%;">
                 <button class="btn btn-block center-block btn-pay" name="editButton" style="width:40%" type="button" onclick="showEditUserInfo()">修改信息</button>
             </div>
             <div class="row hidden" style="margin-top:4%" name="confirmOrCancel">
                 <div class="col-md-6 center-block">
-                    <button class="btn btn-block btn-pay center-block" name="btnConfirm" type="button" style="width:80%">确认</button>
+                    <button class="btn btn-block btn-pay center-block" name="btnConfirm" type="button" onclick="submitUserInfo()" style="width:80%">确认</button>
                 </div>
                 <div class="col-md-6" style="margin-bottom:4%">
                     <button class="btn btn-block btn-pay center-block" name="btnCancel" type="button" onclick="hideEditUserInfo()" style="width:80%">取消</button>
@@ -162,6 +166,45 @@
             </div>
         </form>
     </div>
+</div>
+
+<div class = "hidden" name = "userChangePassword-template">
+    <div class = "col-md-10 col-lg-10 col-sm-9 container-fluid userinfo">
+        <h1 style="color:white">修改密码</h1>
+        <form role="form" name = "changePasswordForm">
+            <div class="row" name="rowPassword" style="margin-top:2%;">
+                <label class = "col-md-offset-3 col-md-2  col-sm-offset-3 col-sm-3">原密码:</label>
+                <input class = "col-md-4 form-control  col-sm-4 col-lg-4" name="userOldPasswordText" type="password">
+            </div>
+            <div class="row" name="rowPassword" style="margin-top:2%;">
+                <label class = "col-md-offset-3 col-md-2  col-sm-offset-3 col-sm-3">新密码:</label>
+                <input class = "col-md-4 form-control  col-sm-4 col-lg-4" name="userNewPasswordText" type="password">
+            </div>
+            <div class="row" name="rowPassword" style="margin-top:2%;">
+                <label class = "col-md-offset-2 col-md-3  col-sm-offset-3 col-sm-3">再次输入新密码:</label>
+                <input class = "col-md-4 form-control  col-sm-4 col-lg-4" name="userNewRepasswordText" type="password">
+            </div>
+            <div class="row text-center" style="margin-top:2%;">
+                <label class = "small" style="background-color:rgba(0,0,0,0.4); color:white; text-align:center"  name="changePasswordWarning"></label>
+            </div>
+            <div class="row" name="editButtonRow" style="margin-bottom:4%;margin-top:4%;">
+                <button class="btn btn-block center-block btn-pay" name="editButton" style="width:40%" type="button" onclick="submitChangePassword()">修改密码</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div name="refund-template" class="hidden">
+    <form class="hidden" action="{{url_for('refundTic')}}" method="POST" name="refundForm">
+        <input name="form-name" value="refundForm">
+        <input name="refundTrainId" value="[refundTrainId]">
+        <input name="refundLoc1" value="[refundLoc1]">
+        <input name="refundLoc2" value="[refundLoc2]">
+        <input name="refundNum" value="[refundNum]">
+        <input name="refundTicType" value="[refundTicType]">
+        <input name="refundDate" value="[refundDate]">
+        <input name="refundTotPrice" value="[refundTotPrice]">
+    </form>
 </div>
 
 <script type="text/javascript">
@@ -186,6 +229,7 @@
         $(document.getElementsByName("main-content")[0]).empty()
         orderCount = orderData[0];
         var orderTrainId, orderType, orderLoc1, orderLoc2, orderTime1, orderTime2, orderTrainName, orderDate1, orderDate2, orderNum, orderTotPrice, currentOrderData;
+        var innerIndex;
         document.getElementsByName("order_num")[0].innerHTML = '您的订单信息共有' + orderCount + '条' + ',点击可以查看详情';
         var myobj = document.getElementsByName("order-info-template")[0].innerHTML;
         myobj = myobj.replace('all-order', {{user_id}});
@@ -203,13 +247,15 @@
             for(var j = 7; j < currentOrderData.length - 1; j += 3){
                 orderType = currentOrderData[j];
                 if(currentOrderData[j + 1] != "0"){
+                    innerIndex = j;
                     orderNum = parseInt(currentOrderData[j + 1]);
                     orderTotPrice = (orderNum * parseFloat(currentOrderData[j + 2])).toFixed(2);
                     break;
                 }
             }
             targetHTML = document.getElementsByName("panel-template")[0].innerHTML;
-            targetHTML = targetHTML.replace(/gpos/g, "collapse" + i.toString());
+            targetHTML = targetHTML.replace(/gpos/g, i.toString());
+            targetHTML = targetHTML.replace('tictypepos', innerIndex);
             targetHTML = targetHTML.replace('[tic-type]', orderType)
             targetHTML = targetHTML.replace('[train-name]', orderTrainName);
             targetHTML = targetHTML.replace('[order-loc1]', orderLoc1);
@@ -221,7 +267,7 @@
             targetHTML = targetHTML.replace('[order-num]', orderNum);
             targetHTML = targetHTML.replace('[tot-price]', orderTotPrice);
             $(document.getElementsByName("{{user_id}}")[0]).append(targetHTML);
-            $('#'+"collapse" + i.toString()).collapse('hide');
+            $('#' + i.toString()).collapse('hide');
         }
     }
 
@@ -234,10 +280,12 @@
     }
 
     function loadWelcome(){
+        $(document.getElementsByName("main-content")[0]).empty();
         $(document.getElementsByName("main-content")[0]).append(document.getElementsByName("welcome-msg-template")[0].innerHTML);
     }
 
     function loadUserInfo(){
+        $(document.getElementsByName("main-content")[0]).empty();
         var userQueryRequest= {
             data: JSON.stringify({
                 'requestName':'query_profile',
@@ -276,6 +324,7 @@
        objArrShow.push(document.getElementsByName("userPhoneText")[0]);
        objArrHide.push(document.getElementsByName("editButtonRow")[0]);
        objArrShow.push(document.getElementsByName("confirmOrCancel")[0]);
+       objArrShow.push(document.getElementsByName("rowPassword")[0]);
        for(var i = 0; i < objArrShow.length; ++i) $(objArrShow[i]).removeClass("hidden");
        for(var i = 0; i < objArrHide.length; ++i) $(objArrHide[i]).addClass("hidden");
     }
@@ -291,18 +340,108 @@
         objArrHide.push(document.getElementsByName("userPhoneText")[0]);
         objArrShow.push(document.getElementsByName("editButtonRow")[0]);
         objArrHide.push(document.getElementsByName("confirmOrCancel")[0]);
+        objArrHide.push(document.getElementsByName("rowPassword")[0]);
         for(var i = 0; i < objArrShow.length; ++i) $(objArrShow[i]).removeClass("hidden");
         for(var i = 0; i < objArrHide.length; ++i) $(objArrHide[i]).addClass("hidden");
     }
 
+    function submitUserInfo(){
+        var form = new FormData(document.getElementsByName("userInfoForm")[0])
+        $.ajax({
+          type: 'POST',
+          url: '{{url_for("userOperator")}}',
+          data: form,
+          success: function(data){
+            if(parseInt(data[0]) == 1) window.location.reload();
+          },
+          dataType: 'json',
+          processData: false,
+          contentType: false,
+          cache : false
+        });
+    }
 
+    function loadChangePassword(){
+        $(document.getElementsByName("main-content")[0]).empty();
+        $(document.getElementsByName("main-content")[0]).append(document.getElementsByName("userChangePassword-template")[0].innerHTML);
+    }
 
+    function submitChangePassword(){
+        oldpwd = document.getElementsByName("userOldPasswordText")[0].value;
+        newpwd = document.getElementsByName("userNewPasswordText")[0].value;
+        newrpwd = document.getElementsByName("userNewRepasswordText")[0].value;
+        warningHandle = document.getElementsByName("changePasswordWarning")[0];
+        if(oldpwd== "" || newpwd == "" || newrpwd == ""){
+            warningHandle.innerHTML = "提示:请完整输入";
+            return;
+        }
+        if(newpwd != newrpwd){
+            warningHandle.innerHTML = "提示:两次输入不一致";
+            return;
+        }
+
+        form = new FormData(document.getElementsByName("changePasswordForm")[0])
+
+        $.ajax({
+          type: 'POST',
+          url: '{{url_for("userOperator")}}',
+          data: form,
+          success: function(data){
+                /*$(document.getElementsByName("userOldPasswordText")[1]).value="";
+                $(document.getElementsByName("userNewPasswordText")[1]).value="";
+                $(document.getElementsByName("userNewRepasswordText")[1]).value="";*/
+                warningHandle = document.getElementsByName("changePasswordWarning")[0];
+                if(parseInt(data[0]) == 1){
+                    warningHandle.innerHTML = "修改成功";
+                }
+                else{
+                    warningHandle.innerHTML = "修改失败，请你自己找原因";
+                }
+          },
+          dataType: 'json',
+          processData: false,
+          contentType: false,
+          cache : false
+        });
+
+    }
+
+    function refundTic(btn){
+        var tmpList = btn.id.split('-');
+        var trainPos = parseInt(tmpList[0]);
+        var typePos = parseInt(tmpList[1]);
+        currentOrderData = orderData[trainPos];
+        orderTrainId = currentOrderData[0];
+        orderLoc1 = currentOrderData[1];
+        orderLoc2 = currentOrderData[4];
+        orderDepartDate = currentOrderData[2];
+        orderTicType = currentOrderData[typePos];
+        orderNum = currentOrderData[typePos + 1];
+        orderTotPrice = (parseInt(orderNum) * parseFloat(currentOrderData[typePos + 2])).toFixed(2);
+        document.getElementsByName("refundTrainId")[0].setAttribute('value', orderTrainId);
+        document.getElementsByName("refundLoc1")[0].setAttribute('value', orderLoc1);
+        document.getElementsByName("refundLoc2")[0].setAttribute('value', orderLoc2);
+        document.getElementsByName("refundTicType")[0].setAttribute('value', orderTicType);
+        document.getElementsByName("refundDate")[0].setAttribute('value', orderDepartDate);
+        document.getElementsByName("refundTotPrice")[0].setAttribute('value', orderTotPrice);
+        document.getElementsByName("refundNum")[0].setAttribute('value', orderNum);
+        $(document.getElementsByName("refundForm")[0]).submit();
+    }
+
+    {% if status == "userInfo" %}
+    $(document).ready(function(){
+        loadUserInfo();
+    });
+    {% endif %}
+
+    {% if status == "editUserInfo" %}
     $(document).ready(function(){
         loadUserInfo();
         showEditUserInfo();
     });
+    {% endif %}
 
-    {% if status == "welcome1" %}
+    {% if status == "welcome" %}
     $(document).ready(function(){
         loadWelcome();
         }
