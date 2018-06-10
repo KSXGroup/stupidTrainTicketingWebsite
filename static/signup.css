@@ -55,6 +55,7 @@
     background-color: rgba(255,255,255,0) ;
     border-color: rgba(255,255,255,1);
     border-width: 2px;
+    color:white;
 }
 
 .btn:focus,
