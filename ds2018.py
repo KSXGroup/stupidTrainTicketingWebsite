@@ -207,6 +207,7 @@ def signout():
         session.pop('user_id', None)
     return redirect(url_for('home'))
 
+"""
 @app.route('/profile', methods=['GET'])
 def profile():
     if 'user_id' not in session:
@@ -248,6 +249,7 @@ def settings():
     else:
         user_name = session['user_name']
         return render_template('settings.html', user_name=user_name)
+"""
 
 @app.route('/orderTic', methods=['POST', 'GET'])
 def orderTic():
@@ -311,6 +313,19 @@ def userZone():
             return json.dumps(getAllorder(user_id, 'CDGKTZO'))
         else:
             return json.dumps("0")
+
+@app.route('/userOperator', methods=['POST'])
+def userOperator():
+    if request.method == 'POST':
+        reqData = json.loads(request.form.get('data'))
+        rqn  = reqData['requestName']
+        if rqn == 'query_profile':
+            uid = reqData['userId']
+            print(rqn + ' ' + uid)
+            rs = db_communicate(' '.join(['query_profile', uid]))
+            ret = re.split(r' ', rs)
+            return json.dumps(ret)
+    else: return json.dumps("0")
 
 @app.route('/debugger', methods=['GET', 'POST'])
 def debugger():

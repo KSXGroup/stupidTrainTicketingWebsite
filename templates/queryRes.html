@@ -35,6 +35,7 @@
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user_name }}<span class="caret"></span></a>
     <ul class="dropdown-menu">
+    <li><a href="{{ url_for('userZone')}}">个人空间</a></li>
     <li><a href="{{ url_for('userZone')}}?status=userInfo">用户信息</a></li>
       <li role="separator" class="divider"></li>
       <li><a href="{{url_for('userZone')}}?status=editUserInfo">修改信息</a></li>
@@ -50,7 +51,7 @@
 <div class="container-fluid">
      <form name="queryTicForm">
         <div class="row" style="margin-left:2.5%; margin-top:2%;">
-            <label class="col-md-2 col-xs-2 col-sm-2 visible-md visible-lg">车次类型</label>
+            <label class="col-md-2 col-xs-2 col-sm-2 visible-md visible-lg" style="font-weight:normal">车次类型</label>
             <label class="checkbox-inline col-md-1 col-xs-1 col-sm-1"><input type="checkbox" id="C"> C </label>
             <label class="checkbox-inline col-md-1 col-md-offset-1 col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1"><input type="checkbox" id="D"> D </label>
             <label class="checkbox-inline col-md-1 col-md-offset-1 col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1"><input type="checkbox" id="G"> G </label>
@@ -72,7 +73,7 @@
 </div>
 
 <div name="block-template" class= "hidden">
-    <div class = "container-fluid">
+    <div class = "container-fluid-special">
         <div class = "row">
             <div class="text-center"><label class="col-lg-2 col-md-2 col-sm-2" style = "font-size:180%" id = "ID_TRAIN_ID">TRAIN-ID</label></div>
             <div style="margin-top:1.4%">

@@ -35,6 +35,7 @@
   <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user_name }}<span class="caret"></span></a>
     <ul class="dropdown-menu">
+    <li><a href="{{ url_for('userZone')}}">个人空间</a></li>
     <li><a href="{{ url_for('userZone')}}?status=userInfo">用户信息</a></li>
       <li role="separator" class="divider"></li>
       <li><a href="{{url_for('userZone')}}?status=editUserInfo">修改信息</a></li>
@@ -125,6 +126,43 @@
     </div>
 </div>
 
+<div class = "hidden" name = "userInfo-template">
+    <div class = "col-md-10 col-lg-10 col-sm-9 container-fluid userinfo">
+        <h1 style="color:white">用户信息</h1>
+        <form role="form">
+            <div class="row" style="margin-top:4%;">
+                <label class = "col-md-offset-3 col-md-2">用户ID:</label>
+                <label class = "col-md-4" name="userIDLabel">{{user_id}}</label>
+            </div>
+            <div class="row" style="margin-top:2%;">
+                <label class = "col-md-offset-3 col-md-2 ">用户名:</label>
+                <label class = "col-md-4" name="userNameLabel">{{user_name}}</label>
+                <input class = "col-md-4 hidden form-control" name="userNameText" value="{{user_name}}"></input>
+            </div>
+            <div class="row" style="margin-top:2%;">
+                <label class = "col-md-offset-3 col-md-2 ">邮箱:</label>
+                <label class = "col-md-4" name="userEmailLabel">user-mail</label>
+                <input class = "col-md-4 hidden form-control" name="userEmailText" value="user-mail"></input>
+            </div>
+            <div class="row" style="margin-top:2%;">
+                <label class = "col-md-offset-3 col-md-2 ">手机号:</label>
+                <label class = "col-md-4" name="userPhoneLabel">user-phone</label>
+                <input class = "col-md-4 hidden form-control" name="userPhoneText" value="user-phone"></input>
+            </div>
+            <div class="row" name="editButtonRow" style="margin-bottom:4%;margin-top:4%;">
+                <button class="btn btn-block center-block btn-pay" name="editButton" style="width:40%" type="button" onclick="showEditUserInfo()">修改信息</button>
+            </div>
+            <div class="row hidden" style="margin-top:4%" name="confirmOrCancel">
+                <div class="col-md-6 center-block">
+                    <button class="btn btn-block btn-pay center-block" name="btnConfirm" type="button" style="width:80%">确认</button>
+                </div>
+                <div class="col-md-6" style="margin-bottom:4%">
+                    <button class="btn btn-block btn-pay center-block" name="btnCancel" type="button" onclick="hideEditUserInfo()" style="width:80%">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script type="text/javascript">
     var orderData;
@@ -199,8 +237,72 @@
         $(document.getElementsByName("main-content")[0]).append(document.getElementsByName("welcome-msg-template")[0].innerHTML);
     }
 
+    function loadUserInfo(){
+        var userQueryRequest= {
+            data: JSON.stringify({
+                'requestName':'query_profile',
+                'userId':'{{user_id}}'
+            }),
+            }
+        var htmlToInsert="";
+        var QuserName, QuserEmail, QuserPhone;
+        $.ajax({
+                url:'{{url_for("userOperator")}}',
+                type:'POST',
+                data: userQueryRequest,
+                dataType: 'json',
+                success:function(data){
+                    QuserName = data[0];
+                    QuserEmail = data[1];
+                    QuserPhone = data[2];
+                    htmlToInsert = document.getElementsByName("userInfo-template")[0].innerHTML;
+                    htmlToInsert = htmlToInsert.replace(/user-mail/g, QuserEmail);
+                    htmlToInsert = htmlToInsert.replace(/user-phone/g, QuserPhone);
+                    $(document.getElementsByName("main-content")[0]).append(htmlToInsert);
+                },
+                error:function(e){
+                }
+        });
+    }
 
-    {% if status == "welcome" %}
+    function showEditUserInfo(){
+       var objArrShow = [];
+       var objArrHide = [];
+       objArrHide.push(document.getElementsByName("userNameLabel")[0]);
+       objArrShow.push(document.getElementsByName("userNameText")[0]);
+       objArrHide.push(document.getElementsByName("userEmailLabel")[0]);
+       objArrShow.push(document.getElementsByName("userEmailText")[0]);
+       objArrHide.push(document.getElementsByName("userPhoneLabel")[0]);
+       objArrShow.push(document.getElementsByName("userPhoneText")[0]);
+       objArrHide.push(document.getElementsByName("editButtonRow")[0]);
+       objArrShow.push(document.getElementsByName("confirmOrCancel")[0]);
+       for(var i = 0; i < objArrShow.length; ++i) $(objArrShow[i]).removeClass("hidden");
+       for(var i = 0; i < objArrHide.length; ++i) $(objArrHide[i]).addClass("hidden");
+    }
+
+    function hideEditUserInfo(){
+        var objArrShow = [];
+        var objArrHide = [];
+        objArrShow.push(document.getElementsByName("userNameLabel")[0]);
+        objArrHide.push(document.getElementsByName("userNameText")[0]);
+        objArrShow.push(document.getElementsByName("userEmailLabel")[0]);
+        objArrHide.push(document.getElementsByName("userEmailText")[0]);
+        objArrShow.push(document.getElementsByName("userPhoneLabel")[0]);
+        objArrHide.push(document.getElementsByName("userPhoneText")[0]);
+        objArrShow.push(document.getElementsByName("editButtonRow")[0]);
+        objArrHide.push(document.getElementsByName("confirmOrCancel")[0]);
+        for(var i = 0; i < objArrShow.length; ++i) $(objArrShow[i]).removeClass("hidden");
+        for(var i = 0; i < objArrHide.length; ++i) $(objArrHide[i]).addClass("hidden");
+    }
+
+
+
+    $(document).ready(function(){
+        loadUserInfo();
+        showEditUserInfo();
+    });
+
+    {% if status == "welcome1" %}
     $(document).ready(function(){
         loadWelcome();
         }
