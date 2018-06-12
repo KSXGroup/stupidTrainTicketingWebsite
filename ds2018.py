@@ -114,6 +114,7 @@ def home():
         else:
             user_name = None
         return render_template('index.html', user_name=user_name)
+    else return ""
 
 @app.route('/queryRes', methods=['GET', 'POST'])
 def queryRes():
@@ -306,6 +307,7 @@ def userZone():
             return json.dumps(getAllorder(user_id, 'CDGKTZO'))
         else:
             return json.dumps("0")
+    else: return ""
 
 @app.route('/userOperator', methods=['POST'])
 def userOperator():
