@@ -1,15 +1,12 @@
 body{
     background: url("../static/bg4.jpg") no-repeat center center fixed;
-    background-size: 100%  ;
-    animation-name:myfirst;
+    background-size: 100%  100%;
+    /*animation-name:myfirst;
     animation-duration:12s;
-    /*变换时间*/
     animation-delay:2s;
-    /*动画开始时间*/
     animation-iteration-count:infinite;
-    /*下一周期循环播放*/
     animation-play-state:running;
-    /*动画开始运行*/
+    */
 }
 @keyframes myfirst
 {

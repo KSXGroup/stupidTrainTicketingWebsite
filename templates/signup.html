@@ -31,77 +31,58 @@
 </ul>
 {% endblock %}
 {% block body %}
+{% if not register_success_info and not register_error_info %}
 <div name = "signup-area" class="container-fluid-signup">
     <div class="row" style="margin-left:5%;">
         <label style="color:white;margin-top:5%;margin-left:2%;font-size:300%">用户注册</label>
     </div>
     <div class="form-container" name="registerArea">
-      <form class="form-signup"  name="registerForm">
+      <form class="form-signup"  name="registerForm" action="{{url_for('signup')}}" method='POST'>
         <input type="text" id="inputName" name="name" class="form-control" placeholder="姓名" required autofocus>
         <input type="text" id="inputEmail" name="email" class="form-control" placeholder="邮箱地址" pattern="^[A-Za-z0-9]+([-_.][A-Za-zd]+)*@([A-Za-zd]+[-.])+[A-Za-zd]{2,5}$" title="邮箱地址" required autofocus>
         <input type="text" id="inputPhone" name="phone" class="form-control" placeholder="手机号" pattern="[0-9]+" title="非法的号码"  required autofocus>
         <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" pattern="[0-9A-z]+" title="非法的字符" required>
-        <input type="password" id="repeatPassword" name="repassword" class="form-control" placeholder="再次输入密码" pattern="[0-9A-z]+" title="非法的字(符" required>
-        <button class="btn btn-lg btn-primary btn-block" type="button" style="margin-top:10%;font-size:150%;font-weight:bold;" onclick="registerUser()">注册</button>
+        <input type="password" id="repeatPassword" name="repassword" class="form-control" placeholder="再次输入密码" pattern="[0-9A-z]+" title="非法的字符" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top:10%;font-size:150%;font-weight:bold;">注册</button>
       </form>
     </div>
  </div>
-
-<div name="successTemplate" class="hidden">
-    <div class="row center-block">
-        <h1 class="text-center" style="color:white">注册成功</h1>
-        <h2 class="text-center" style="color:white">您的用户ID是: <strong>[user_id]</strong></h2>
+{% else %}
+{% if register_success_info %}
+<div name = "signup-area" class="container-fluid-signup">
+    <div class="row" style="margin-left:5%;">
+        <label style="color:white;margin-top:5%;margin-left:2%;font-size:300%">用户注册</label>
     </div>
-    <div class="row center-block">
-        <h4 style="color:white;" class="text-center">请牢记您的登录ID，这将是您登录的唯一凭据</h4>
+    <div class="form-container" name="registerArea">
+        <div class="row center-block">
+            <h1 class="text-center" style="color:white">注册成功</h1>
+            <h2 class="text-center" style="color:white">您的用户ID是: <strong>{{user_id}}</strong></h2>
+        </div>
+        <div class="row center-block">
+            <h4 style="color:white;" class="text-center">请牢记您的登录ID，这将是您登录的唯一凭据</h4>
+        </div>
+        <button class="btn btn-block center-block" style="width:60%;margin-top:5%;height:300%;font-size:150%;font-weight:bold;" onclick="toUserSignIn()">登录</button>
     </div>
-    <button class="btn btn-block center-block" style="width:60%;margin-top:5%;height:300%;font-size:150%;font-weight:bold;" onclick="toUserSignIn()">登录</button>
 </div>
-
-<div name="ErrorTemplate" class="hidden">
-    <div class="row center-block">
-        <h1 class="text-center" style="color:white">注册发生错误</h1>
+{% endif %}
+{% if register_error_info %}
+<div name = "signup-area" class="container-fluid-signup">
+    <div class="row" style="margin-left:5%;">
+        <label style="color:white;margin-top:5%;margin-left:2%;font-size:300%">用户注册</label>
     </div>
-    <div class="row center-block">
-        <h2 style="color:white;" class="text-center">请点击下方按钮重试</h2>
+    <div class="form-container" name="registerArea">
+        <div class="row center-block">
+            <h1 class="text-center" style="color:white">注册发生错误</h1>
+        </div>
+        <div class="row center-block">
+            <h2 style="color:white;" class="text-center">请点击下方按钮重试</h2>
+        </div>
+        <button class="btn btn-block center-block" style="width:60%;margin-top:5%;height:300%;font-size:150%;font-weight:bold;" onclick="toUserSignUp()">重试</button>
     </div>
-    <button class="btn btn-block center-block" style="width:60%;margin-top:5%;height:300%;font-size:150%;font-weight:bold;" onclick="toUserSignUp()">重试</button>
 </div>
+{% endif %}
+{% endif %}
 <script type="text/javascript">
-    function registerUser(){
-        form = new FormData(document.getElementsByName("registerForm")[0]);
-        $.ajax({
-                url:'{{url_for("signup")}}',
-                type:'POST',
-                data:form,
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                cache : false,
-                success:function(data){
-                    var retVal = parseInt(data);
-                    if(retVal < 2018) loadErrorInfo();
-                    else loadSuccessInfo(retVal);
-                },
-                error:function(e){
-                }
-        });
-    }
-
-    function loadErrorInfo(){
-        regHandle = document.getElementsByName("registerArea")[0];
-        errorHandle = document.getElementsByName("ErrorTemplate")[0];
-        $(regHandle).empty();
-        $(regHandle).append(errorHandle.innerHTML);
-    }
-    function loadSuccessInfo(uid){
-        successHandle = document.getElementsByName("successTemplate")[0];
-        regHandle = document.getElementsByName("registerArea")[0];
-        $(regHandle).empty();
-        toReplace = successHandle.innerHTML;
-        toReplace = toReplace.replace('[user_id]', uid);
-        $(regHandle).append(toReplace);
-    }
 
 function toUserSignIn(){
     window.location="{{url_for('signin')}}";

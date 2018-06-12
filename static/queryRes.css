@@ -22,6 +22,24 @@ font-size:30px;
     vertical-align: middle !important;
 }
 
+.btn-fliter{
+    background-color:rgba(0,0,0,0);
+    border-width:2px;
+    border-color:white;
+    font-size:60%;
+    font-weight:bold;
+    margin-left:2%;
+    color:white;
+}
+
+.btn-fliter:hover{
+    background-color:rgba(255,255,255,1);
+}
+
+.btn-fliter-onclick{
+    background-color:rgba(255,255,255,1);
+    color:black;
+}
 
 .btn-pay{
     margin-right: 5%;
@@ -30,9 +48,9 @@ font-size:30px;
     background-color: rgba(255,255,255,0)
 }
 
-.btn-pay:hover,
-.btn-pay:focus{
-    background-color: rgba(255,255,255,1)
+.btn-pay::hover,
+.btn-pay::focus{
+    background-color: rgba(255,255,255,1);
 }
 
 .btn-search{
@@ -102,3 +120,14 @@ input::input-placeholder{
  :-ms-input-placeholder {
        color:#d9d9d9 !important;
   }
+
+
+
+
+
+
+
+
+
+
+

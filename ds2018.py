@@ -100,6 +100,8 @@ def getAllorder(userid, catalog):
     print(ret)
     for i in range(1, len(ret)):
         ret[i] = re.split(r' ', ret[i])
+    if len(ret) == 0:
+        ret.append("0")
     return ret
 
 
@@ -107,21 +109,11 @@ def getAllorder(userid, catalog):
 @app.route('/', methods=['GET'])
 def home():
     if request.method == 'GET':
-        if 'home_success_info' in session and session['home_success_info'] != '':
-            success_info = session['home_success_info']
-            session.pop('home_success_info', None)
-        else:
-            success_info = None
-        if 'home_err_info' in session and session['home_err_info'] != '':
-            err_info = session['home_err_info']
-            session.pop('home_err_info', None)
-        else:
-            err_info = None
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
             user_name = session['user_name']
         else:
             user_name = None
-        return render_template('index.html', success_info=success_info, err_info=err_info, user_name=user_name)
+        return render_template('index.html', user_name=user_name)
 
 @app.route('/queryRes', methods=['GET', 'POST'])
 def queryRes():
@@ -131,11 +123,11 @@ def queryRes():
         loc1 = request.form['loc1']
         loc2 = request.form['loc2']
         ddate = request.form['ddate']
+        catalog = request.form['catalog']
         if request.form['id'] == 'queryRes':
             if loc1 == "" or loc2 == "" or ddate == "":
                 return json.dumps("")
-            qcmd = ' '.join(['query_ticket', loc1, loc2, ddate])
-            qcmd += " CDGKOTZ"
+            qcmd = ' '.join(['query_ticket', loc1, loc2, ddate, catalog])
             qstring = db_communicate(qcmd)
             resList = re.split(r'\n', qstring)
             for item in resList:
@@ -148,13 +140,13 @@ def queryRes():
             qRes = json.dumps(retList)
             return qRes
         else:
-            return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'])
+            return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ")
     else:
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
             user_name = session['user_name']
         else:
             user_name = None
-        return render_template('queryRes.html', user_name = user_name)
+        return render_template('queryRes.html', user_name = user_name, catalog="")
 
 @app.route('/signin', methods=['POST', 'GET'])
 def signin():
@@ -162,20 +154,21 @@ def signin():
         userid = request.form['userid']
         password = request.form['password']
         reply = db_communicate(' '.join(['login', userid, password]))
-        print(reply)
-        if reply == '0' or reply == 'Wrong Command':
-            return render_template('signin.html', err_info='Login failed for some reason.')
+        if reply[0] == "0":
+            return json.dumps("0")
         else:
-            session['home_success_info'] = 'Logged in successfully! Now you can play around.'
             session['user_id'] = userid
             reply = db_communicate(' '.join(['query_profile', userid]))
-            if reply == '0':
-                session['home_err_info'] = 'Login failed! User does not exist.'
+            if reply[0] == '0':
+                return json.dumps("0")
             else:
                 session['user_name'] = reply.split(' ')[0]
-            return redirect(url_for('userZone'))
+                return json.dumps("1")
     else:
-        return render_template('signin.html')
+        if 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
+            return redirect(url_for('userZone'))
+        else:
+            return render_template('signin.html')
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -189,10 +182,10 @@ def signup():
             return json.dumps("0")
         reply = db_communicate(' '.join(['register', name, password, email, phone]))
         if int(reply) < 2018:
-            return json.dumps("0")
+            return render_template('signup.html',register_error_info="error")
         else:
             userid = int(reply);
-            return json.dumps(str(userid))
+            return render_template('signup.html',register_success_info="success", user_id = str(userid))
     else:
         if 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
             user_name = session['user_name']
@@ -357,6 +350,10 @@ def debugger():
         return render_template("debugger.html")
     else:
         return render_template("debugger.html")
+@app.route('/hzfengsy', methods=['GET'])
+def hzfengsy():
+    return render_template('hzfengsy.html')
+
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 80, debug=True)

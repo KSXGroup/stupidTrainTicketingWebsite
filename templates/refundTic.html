@@ -142,7 +142,7 @@ function confirmRefundTicket(){
         document.getElementsByName("warning")[0].innerHTML="本订单中余票不足";
         return;
     }
-    document.getElementsByName("confirmRefundForm")[0].setAttribute('value',document.getElementsByName("refundAmount")[0].value);
+    document.getElementsByName("refund-num")[0].setAttribute('value',document.getElementsByName("refundAmount")[0].value);
     var form = new FormData(document.getElementsByName("confirmRefundForm")[0]);
     $.ajax({
             url:'{{url_for("refundTic")}}',

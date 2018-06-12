@@ -52,12 +52,12 @@
      <form name="queryTicForm">
         <div class="row" style="margin-left:2.5%; margin-top:2%;">
             <label class="col-md-2 col-xs-2 col-sm-2 visible-md visible-lg" style="font-weight:normal">车次类型</label>
-            <label class="checkbox-inline col-md-1 col-xs-1 col-sm-1"><input type="checkbox" id="C"> C </label>
-            <label class="checkbox-inline col-md-1 col-md-offset-1 col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1"><input type="checkbox" id="D"> D </label>
-            <label class="checkbox-inline col-md-1 col-md-offset-1 col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1"><input type="checkbox" id="G"> G </label>
-            <label class="checkbox-inline col-md-1 col-md-offset-1 col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1"><input type="checkbox" id="K"> K </label>
-            <label class="checkbox-inline col-md-1 col-md-offset-1 col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1"><input type="checkbox" id="T"> T </label>
-            <label class="checkbox-inline col-md-1 col-md-offset-1 col-xs-1 col-xs-offset-1 col-sm-1 col-sm-offset-1"><input type="checkbox" id="Z"> Z </label>
+            <button class="btn btn-fliter" id="C" name="catalogSelector" onclick="updateCatalogWhenSelected(this)" type = "button">C-城际</button>
+            <button class="btn btn-fliter" id="D" name="catalogSelector" onclick="updateCatalogWhenSelected(this)" type = "button">D-动车</button>
+            <button class="btn btn-fliter" id="G" name="catalogSelector" onclick="updateCatalogWhenSelected(this)" type = "button">G-高铁</button>
+            <button class="btn btn-fliter" id="K" name="catalogSelector" onclick="updateCatalogWhenSelected(this)" type = "button">K-快速</button>
+            <button class="btn btn-fliter" id="T" name="catalogSelector" onclick="updateCatalogWhenSelected(this)" type = "button">T-特快</button>
+            <button class="btn btn-fliter" id="Z" name="catalogSelector" onclick="updateCatalogWhenSelected(this)" type = "button">Z-直达</button>
         </div>
         <hr>
         <div class="row">
@@ -65,6 +65,7 @@
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1 input-md form-control" name="loc2" placeholder="到达站" type="text">
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1  input-md form-control" id="mytimepicker" name="ddate" placeholder="日期" type="text">
             <input class="hidden" type="text" value="queryRes" name = "id">
+            <input class="hidden" type="text" name="catalog" value="{{catalog}}">
             <button class="btn-lg btn-search glyphicon glyphicon-search col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1" type="button" onclick="queryTicket()"></button>
         </div>
     </form>
@@ -147,6 +148,38 @@
         });
    }
 
+    function selectAllCatalog(){
+        selectorList = document.getElementsByName("catalogSelector");
+        for(var i = 0; i < selectorList.length; ++i){
+            if(!$(selectorList[i]).hasClass("btn-fliter-onclick")) $(selectorList[i]).addClass("btn-fliter-onclick");
+        }
+        updateCatalog();
+    }
+
+    function unselectAllCatalog(){
+        selectorList = document.getElementsByName("catalogSelector");
+        for(var i = 0; i < selectorList.length; ++i){
+            if($(selectorList[i]).hasClass("btn-fliter-onclick")) $(selectorList[i]).removeClass("btn-fliter-onclick");
+        }
+        updateCatalog();
+    }
+
+    function updateCatalogWhenSelected(btn){
+        if($(btn).hasClass("btn-fliter-onclick")) $(btn).removeClass("btn-fliter-onclick");
+        else $(btn).addClass("btn-fliter-onclick");
+        var catalogString = "";
+        selectorList = document.getElementsByName("catalogSelector");
+        for(var i = 0; i < selectorList.length; ++i) if($(selectorList[i]).hasClass("btn-fliter-onclick")) catalogString += selectorList[i].id;
+        document.getElementsByName("catalog")[0].setAttribute('value', catalogString);
+    }
+
+    function updateCatalog(){
+        var catalogString = "";
+        selectorList = document.getElementsByName("catalogSelector");
+        for(var i = 0; i < selectorList.length; ++i) if($(selectorList[i]).hasClass("btn-fliter-onclick")) catalogString += selectorList[i].id;
+        document.getElementsByName("catalog")[0].setAttribute('value', catalogString);
+    }
+
     function createTable(dataId){
        var currentTrainData = trainData[dataId];
        var trainId = currentTrainData[0];
@@ -205,14 +238,24 @@
         $(document.getElementsByName("order_template")[0]).submit();
     }
 
-    {% if postFrom == "mainpage" %}
+    function removeActive(){
+        selectorList = document.  getElementsByName("catalogSelector");
+        for(var i = 0; i < selectorList.length; ++i){
+            $(selectorList[i]).removeClass('active');
+            $(selectorList[i]).removeClass('focus');
+        }
+    }
+
     $(document).ready(function(){
+        selectAllCatalog();
+        {% if postFrom == "mainpage" %}
         document.getElementsByName("loc1")[0].setAttribute('value', '{{loc1}}');
         document.getElementsByName("loc2")[0].setAttribute('value', '{{loc2}}');
         document.getElementsByName("ddate")[0].setAttribute('value', '{{ddate}}');
         queryTicket();
+        {% endif %}
     });
-    {% endif %}
+
 </script>
 {% endblock %}
 

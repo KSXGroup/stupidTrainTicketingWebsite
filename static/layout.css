@@ -1,5 +1,7 @@
 body{
     background-color:#11F4ED;
+    background: url("../static/bg4.jpg") no-repeat center center fixed;
+    background-size: 100%  100%;
 }
 
 .form-control:focus{

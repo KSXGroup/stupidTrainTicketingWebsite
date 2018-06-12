@@ -37,12 +37,42 @@
         <label style="color:white;margin-top:5%;margin-left:2%;font-size:300%">用户登录</label>
     </div>
     <div class="form-container">
-        <form class="form-signin" action="{{ url_for('signin') }}" method="post">
+        <form class="form-signin" name = "formForSignIn">
           <input type="userid" id="inputID" name="userid" class="form-control" placeholder="用户ID" pattern="[0-9]+" title="只能输入数字" required autofocus>
           <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" title="非法的字符" required>
-          <button class="btn btn-lg btn-primary btn-block" style="margin-top:5%" type="submit">登录</button>
+          <label style="margin-top:1%;margin-bottom:1%;font-size:120%;background-color:rgba(0,0,0,0.4);color:white" name="warningLabel"></label>
+          <button class="btn btn-lg btn-primary btn-block" style="margin-top:5%" type="button" onclick="userLogin()">登录</button>
           <p class="signin-hint" style="font-size: 20px; color:white">如果还没有帐号，您可以在这里注册<a href="{{ url_for('signup') }}">注册</a></p>
         </form>
     </div>
  </div>
+
+<script type="text/javascript">
+function userLogin(){
+    form = new FormData(document.getElementsByName("formForSignIn")[0]);
+    if(document.getElementsByName("userid")[0].value == '') {document.getElementsByName("warningLabel")[0].innerHTML = "请输入用户名";return;}
+    if(document.getElementsByName("password")[0].value == '') {document.getElementsByName("warningLabel")[0].innerHTML = "请输入密码";return;}
+    $.ajax({
+            url:'{{url_for("signin")}}',
+            type:'POST',
+            data:form,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            cache : false,
+            success:function(data){
+                if(parseInt(data) == 1){
+                    window.location = "{{url_for('userZone')}}";
+                    return;
+                }
+                else{
+                    document.getElementsByName("warningLabel")[0].innerHTML = "用户名或密码错误";
+                    return;
+                }
+            },
+            error:function(e){
+            }
+    });
+}
+</script>
 {% endblock %}
