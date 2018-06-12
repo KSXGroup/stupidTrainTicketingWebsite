@@ -45,11 +45,12 @@ font-size:30px;
     margin-right: 5%;
     border-width: 2px;
     border-color: rgba(255,255,255,1);
-    background-color: rgba(255,255,255,0)
+    background-color: rgba(255,255,255,0);
+    font-weight:bold;
 }
 
-.btn-pay::hover,
-.btn-pay::focus{
+.btn-pay:hover,
+.btn-pay:focus{
     background-color: rgba(255,255,255,1);
 }
 

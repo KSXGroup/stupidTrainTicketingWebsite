@@ -144,11 +144,13 @@ def queryRes():
         else:
             return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ")
     else:
-        if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
+        if 'user_id' in session and 'user_name' in session and session['user_name'] != '' and session['user_id'] != '':
             user_name = session['user_name']
+            user_id = session['user_id']
         else:
             user_name = None
-        return render_template('queryRes.html', user_name = user_name, catalog="")
+            user_id = None
+        return render_template('queryRes.html', user_name = user_name, user_id = user_id, catalog="")
 
 @app.route('/signin', methods=['POST', 'GET'])
 def signin():
@@ -295,7 +297,7 @@ def userZone():
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
             user_name = session['user_name']
             user_id = session['user_id']
-            return json.dumps(getAllorder(user_id, 'GKTZO'))
+            return json.dumps(getAllorder(user_id, 'CDGKTZO'))
         else:
             return json.dumps("0")
 

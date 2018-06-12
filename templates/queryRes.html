@@ -243,14 +243,6 @@
         $(document.getElementsByName("order_template")[0]).submit();
     }
 
-    function removeActive(){
-        selectorList = document.  getElementsByName("catalogSelector");
-        for(var i = 0; i < selectorList.length; ++i){
-            $(selectorList[i]).removeClass('active');
-            $(selectorList[i]).removeClass('focus');
-        }
-    }
-
     $(document).ready(function(){
         selectAllCatalog();
         {% if postFrom == "mainpage" %}
