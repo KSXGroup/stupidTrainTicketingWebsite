@@ -119,11 +119,13 @@ def home():
 def queryRes():
     resList = []
     retList = []
+    catalog = ""
     if request.method == 'POST':
         loc1 = request.form['loc1']
         loc2 = request.form['loc2']
         ddate = request.form['ddate']
-        catalog = request.form['catalog']
+        if 'catalog' in request.form and request.form['catalog'] != "": catalog = request.form['catalog']
+        else: catalog="CDGKTZ"
         if request.form['id'] == 'queryRes':
             if loc1 == "" or loc2 == "" or ddate == "":
                 return json.dumps("")

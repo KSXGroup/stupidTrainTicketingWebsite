@@ -119,6 +119,7 @@
 <script type="text/javascript">
    var trainData;
    var currentDate;
+   var userid = "{{user_id}}";
    function queryTicket(){
         $("#bryan").empty();
         currentDate = document.getElementsByName("ddate")[0].value;
@@ -222,6 +223,10 @@
     }
 
     function startOrder(btn){
+        if(userid == ""){
+            window.location = "{{url_for('signin')}}";
+            return;
+        }
         var dataString = btn.id;
         var dataList = dataString.split('-');
         var dataId = dataList[0];
