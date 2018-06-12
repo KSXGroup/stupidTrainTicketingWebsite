@@ -223,7 +223,7 @@
     }
 
     function startOrder(btn){
-        if(userid == ""){
+        if(userid == "" || userid == "None"){
             window.location = "{{url_for('signin')}}";
             return;
         }

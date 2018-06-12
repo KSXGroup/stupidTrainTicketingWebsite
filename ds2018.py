@@ -142,7 +142,13 @@ def queryRes():
             qRes = json.dumps(retList)
             return qRes
         else:
-            return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ")
+            if 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
+                user_name = session['user_name']
+                user_id = session['user_id']
+            else:
+                user_id = None
+                user_name = None
+            return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ", user_id = user_id, user_name = user_name)
     else:
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '' and session['user_id'] != '':
             user_name = session['user_name']
@@ -193,7 +199,7 @@ def signup():
     else:
         if 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
             user_name = session['user_name']
-            user_name = session['user_id']
+            user_id = session['user_id']
             return redirect(url_for('userZone'))
         else:
             user_name = None
@@ -228,7 +234,7 @@ def orderTic():
                 order_time2 = request.form['order-time2']
                 order_price = request.form['order-price']
                 order_left = request.form['order-left']
-                return render_template('orderTic.html',user_name = session['user_name'], train_id = order_trainid, tic_loc1 = order_loc1, tic_loc2 = order_loc2, tic_date = order_date, tic_type = order_kind, tic_price = order_price, tic_left = order_left, tic_time1 = order_time1, tic_time2 = order_time2)
+                return render_template('orderTic.html',user_name = user_name, train_id = order_trainid, tic_loc1 = order_loc1, tic_loc2 = order_loc2, tic_date = order_date, tic_type = order_kind, tic_price = order_price, tic_left = order_left, tic_time1 = order_time1, tic_time2 = order_time2)
             else:
                 if request.form['form-name'] == "corder":
                     corder_trainid = request.form['corder-train-id']
