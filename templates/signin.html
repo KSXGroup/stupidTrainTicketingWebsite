@@ -50,8 +50,16 @@
 <script type="text/javascript">
 function userLogin(){
     form = new FormData(document.getElementsByName("formForSignIn")[0]);
-    if(document.getElementsByName("userid")[0].value == '') {document.getElementsByName("warningLabel")[0].innerHTML = "请输入用户名";return;}
+    if(document.getElementsByName("userid")[0].value == '') {document.getElementsByName("warningLabel")[0].innerHTML = "请输入用户ID";return;}
     if(document.getElementsByName("password")[0].value == '') {document.getElementsByName("warningLabel")[0].innerHTML = "请输入密码";return;}
+    var reg1 = /^[a-zA-Z0-9!@#^]{3,12}$/;
+    var reg2 = /^[0-9]*$/;
+    if(!reg2.test(document.getElementsByName("userid")[0].value)){
+            document.getElementsByName("warningLabel")[0].innerHTML = "请输入正确用户ID";return;
+    }
+    if(!reg1.test(document.getElementsByName("password")[0].value)){
+            document.getElementsByName("warningLabel")[0].innerHTML = "非法的密码";return;
+    }
     $.ajax({
             url:'{{url_for("signin")}}',
             type:'POST',

@@ -39,10 +39,10 @@
     <div class="form-container" name="registerArea">
       <form class="form-signup"  name="registerForm" action="{{url_for('signup')}}" method='POST'>
         <input type="text" id="inputName" name="name" class="form-control" placeholder="姓名" required autofocus>
-        <input type="text" id="inputEmail" name="email" class="form-control" placeholder="邮箱地址" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" title="邮箱地址" required autofocus>
+        <input type="text" id="inputEmail" name="email" class="form-control" placeholder="邮箱地址" pattern="^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$" title="邮箱地址" required autofocus>
         <input type="text" id="inputPhone" name="phone" class="form-control" placeholder="手机号" pattern="[0-9]+" title="非法的号码"  required autofocus>
         <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" pattern="[0-9A-z]+" title="非法的字符" required>
-        <input type="password" id="repeatPassword" name="repassword" class="form-control" placeholder="再次输入密码" pattern="[0-9A-z]+" title="非法的字符" required>
+        <input type="password" id="repeatPassword" name="repassword" class="form-control" placeholder="再次输入密码" pattern="^[a-zA-Z0-9!@#^]{6,12}$" title="非法的字符" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top:10%;font-size:150%;font-weight:bold;">注册</button>
       </form>
     </div>
