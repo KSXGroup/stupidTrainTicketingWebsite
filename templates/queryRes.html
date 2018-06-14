@@ -48,7 +48,7 @@
 
 {% block body %}
 
-<div class="container-fluid">
+<div class="container-fluid" >
      <form name="queryTicForm">
         <div class="row" style="margin-left:2.5%; margin-top:2%;">
             <label class="col-md-2 col-xs-2 col-sm-2 visible-md visible-lg" style="font-weight:normal">车次类型</label>
@@ -61,14 +61,17 @@
         </div>
         <hr>
         <div class="row">
+            <input class="hidden" name="ifQueryTransfer" value="0" type="text">
             <input class="col-md-1 col-sm-1 col-xs-1 input-md form-control" name="loc1" placeholder="始发站" type="text">
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1 input-md form-control" name="loc2" placeholder="到达站" type="text">
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1  input-md form-control" id="mytimepicker" name="ddate" placeholder="日期" type="text">
             <input class="hidden" type="text" value="queryRes" name = "id">
             <input class="hidden" type="text" name="catalog" value="{{catalog}}">
             <button class="btn-lg btn-search glyphicon glyphicon-search col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1" type="button" onclick="queryTicket()"></button>
+            <button class="btn-fliter btn-normal btn" style="height:50px;" type = "button" onclick="useQueryTransfer()" name="queryTransferButton">中转查询</button>
         </div>
     </form>
+    <h4 style="color:white;margin-left:0.5%" class="glyphicon glyphicon-info-sign hidden" name="transferTips"> 您使用了中转查询,系统将自动为您分配最快的换乘方式</h4>
 </div>
 <div id="bryan">
 </div>
@@ -148,6 +151,22 @@
                 }
         });
    }
+
+    function useQueryTransfer(){
+        var transferHandle = document.getElementsByName("transferTips")[0];
+        var btnHandle = document.getElementsByName("queryTransferButton")[0];
+        var iptHandle = document.getElementsByName("ifQueryTransfer")[0];
+        if($(transferHandle).hasClass("hidden")){
+            $(transferHandle).removeClass("hidden");
+            $(btnHandle).addClass("btn-fliter-onclick");
+            iptHandle.setAttribute('value', "1");
+        }
+        else{
+            $(transferHandle).addClass("hidden");
+            $(btnHandle).removeClass("btn-fliter-onclick");
+            iptHandle.setAttribute('value', "0");
+        }
+    }
 
     function selectAllCatalog(){
         selectorList = document.getElementsByName("catalogSelector");

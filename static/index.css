@@ -1,6 +1,6 @@
 body{
     background: url("../static/bg4.jpg") no-repeat center center fixed;
-    background-size: 100%  100%;
+    background-size: auto auto;
     /*animation-name:myfirst;
     animation-duration:12s;
     animation-delay:2s;

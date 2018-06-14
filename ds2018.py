@@ -122,34 +122,61 @@ def queryRes():
     retList = []
     catalog = ""
     if request.method == 'POST':
-        loc1 = request.form['loc1']
-        loc2 = request.form['loc2']
-        ddate = request.form['ddate']
-        if 'catalog' in request.form and request.form['catalog'] != "": catalog = request.form['catalog']
-        else: catalog="CDGKTZ"
-        if request.form['id'] == 'queryRes':
+        if request.form['ifQueryTransfer'] == "0":
+            loc1 = request.form['loc1']
+            loc2 = request.form['loc2']
+            ddate = request.form['ddate']
             if loc1 == "" or loc2 == "" or ddate == "":
-                return json.dumps("")
-            qcmd = ' '.join(['query_ticket', loc1, loc2, ddate, catalog])
-            qstring = db_communicate(qcmd)
-            resList = re.split(r'\n', qstring)
-            for item in resList:
-                retList.append(re.split(r'[ ]', item))
-            restmp = retList[1 : len(retList) - 1]
-            restmp = sorted(restmp, key = lambda item : item[3].lower())
-            for i in range(1, len(resList) - 1):
-                retList[i] = restmp[i - 1]
-            retList.pop()
-            qRes = json.dumps(retList)
-            return qRes
-        else:
-            if 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
-                user_name = session['user_name']
-                user_id = session['user_id']
+                return json.dumps("0")
+            if 'catalog' in request.form and request.form['catalog'] != "": catalog = request.form['catalog']
+            else: catalog="CDGKTZ"
+            if request.form['id'] == 'queryRes':
+                if loc1 == "" or loc2 == "" or ddate == "":
+                    return json.dumps("")
+                qcmd = ' '.join(['query_ticket', loc1, loc2, ddate, catalog])
+                qstring = db_communicate(qcmd)
+                resList = re.split(r'\n', qstring)
+                for item in resList:
+                    retList.append(re.split(r'[ ]', item))
+                restmp = retList[1 : len(retList) - 1]
+                restmp = sorted(restmp, key = lambda item : item[3].lower())
+                for i in range(1, len(resList) - 1):
+                    retList[i] = restmp[i - 1]
+                retList.pop()
+                qRes = json.dumps(retList)
+                return qRes
             else:
-                user_id = None
-                user_name = None
-            return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ", user_id = user_id, user_name = user_name)
+                if 'user_id' in session and 'user_name' in session and session['user_name'] != None and session['user_name'] != "" and session['user_id'] != None and session['user_id'] != "":
+                    user_name = session['user_name']
+                    user_id = session['user_id']
+                else:
+                    user_id = None
+                    user_name = None
+                return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ", user_id = user_id, user_name = user_name)
+        else:
+             if request.form['ifQueryTransfer'] == "1":
+                 loc1 = request.form['loc1']
+                 loc2 = request.form['loc2']
+                 ddate = request.form['ddate']
+                 if loc1 == "" or loc2 == "" or ddate == "":
+                     return json.dumps("0")
+                 if 'catalog' in request.form and request.form['catalog'] != "": catalog = request.form['catalog']
+                 else: catalog="CDGKTZ"
+                 qtcmd = ' '.join(['query_transfer', loc1, loc2, ddate, catalog])
+                 res = db_communicate(qtcmd)
+                 if len(res) <= 3: return json.dumps("0")
+                 else:
+                     tmpList = re.split(r'\n', res)
+                     retList = []
+                     retList.append("2")
+                     tmpList.pop()
+                     for item in tmpList:
+                         itmpList = re.split(r' ', item)
+                         itmpList.pop()
+                         itmpList.pop(7)
+                         retList.append(itmpList)
+                     return json.dumps(retList)
+             else: return json.dumps("0")
     else:
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '' and session['user_id'] != '':
             user_name = session['user_name']
@@ -350,6 +377,7 @@ def userOperator():
 
     else: return json.dumps("0")
 
+
 @app.route('/debugger', methods=['GET', 'POST'])
 def debugger():
     if request.method == 'POST':
@@ -362,6 +390,7 @@ def debugger():
         return render_template("debugger.html")
     else:
         return render_template("debugger.html")
+
 @app.route('/hzfengsy', methods=['GET'])
 def hzfengsy():
     return render_template('hzfengsy.html')
