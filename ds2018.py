@@ -114,7 +114,7 @@ def home():
         else:
             user_name = None
         return render_template('index.html', user_name=user_name)
-    else return ""
+    else: return ""
 
 @app.route('/queryRes', methods=['GET', 'POST'])
 def queryRes():
