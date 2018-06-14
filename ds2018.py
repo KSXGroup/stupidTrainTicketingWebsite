@@ -72,10 +72,21 @@ def getDateStrings():
     ret.append(s1)
     return ret
 
+def getDateStringsEnglish():
+    ret =  []
+    a = datetime.utcnow()
+    a += timedelta(hours=8)
+    a1 = a + timedelta(days=30)
+    s = str(a.year) + "-" + str(a.month) + "-" + str(a.day)
+    s1 = str(a1.year) + "-" + str(a1.month) + "-" + str(a1.day)
+    ret.append(s)
+    ret.append(s1)
+    return ret
+
 def getAllorder(userid, catalog):
     currentDate = datetime.utcnow() + timedelta(hours=8)
     ret = []
-    for i in range(1,31):
+    for i in range(1,32):
         syear = str(currentDate.year)
         smonth = str(currentDate.month)
         sday = str(currentDate.day)
@@ -108,25 +119,29 @@ def getAllorder(userid, catalog):
 @app.route('/index', methods=['GET'])
 @app.route('/', methods=['GET'])
 def home():
+    dateList = getDateStringsEnglish()
     if request.method == 'GET':
         if 'user_id' in session and 'user_name' in session and session['user_name'] != '':
             user_name = session['user_name']
         else:
             user_name = None
-        return render_template('index.html', user_name=user_name)
+        return render_template('index.html', user_name=user_name, min_date = dateList[0], max_date = dateList[1])
     else: return ""
 
 @app.route('/queryRes', methods=['GET', 'POST'])
 def queryRes():
     resList = []
     retList = []
+    dateList = getDateStringsEnglish()
     catalog = ""
+    min_date = dateList[0]
+    max_date = dateList[1]
     if request.method == 'POST':
         if request.form['ifQueryTransfer'] == "0":
             loc1 = request.form['loc1']
             loc2 = request.form['loc2']
             ddate = request.form['ddate']
-            if loc1 == "" or loc2 == "" or ddate == "":
+            if (loc1 == "" or loc2 == "" or ddate == "") and request.form['id'] == 'queryRes':
                 return json.dumps("0")
             if 'catalog' in request.form and request.form['catalog'] != "": catalog = request.form['catalog']
             else: catalog="CDGKTZ"
@@ -152,7 +167,7 @@ def queryRes():
                 else:
                     user_id = None
                     user_name = None
-                return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ", user_id = user_id, user_name = user_name)
+                return render_template('queryRes.html', loc1 = loc1, loc2 = loc2, ddate = ddate, postFrom = request.form['id'], catalog="CDGKTZ", user_id = user_id, user_name = user_name, min_date = min_date, max_date = max_date)
         else:
              if request.form['ifQueryTransfer'] == "1":
                  loc1 = request.form['loc1']
@@ -184,13 +199,14 @@ def queryRes():
         else:
             user_name = None
             user_id = None
-        return render_template('queryRes.html', user_name = user_name, user_id = user_id, catalog="")
+        return render_template('queryRes.html', user_name = user_name, user_id = user_id, catalog="", min_date = min_date, max_date = max_date)
 
 @app.route('/signin', methods=['POST', 'GET'])
 def signin():
     if request.method == 'POST':
         userid = request.form['userid']
         password = request.form['password']
+        if userid == "" or password == "": return json.dumps("0")
         reply = db_communicate(' '.join(['login', userid, password]))
         if reply[0] == "0":
             return json.dumps("0")

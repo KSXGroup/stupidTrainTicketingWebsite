@@ -64,7 +64,7 @@
             <input class="hidden" name="ifQueryTransfer" value="0" type="text">
             <input class="col-md-1 col-sm-1 col-xs-1 input-md form-control" name="loc1" placeholder="始发站" type="text">
             <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1 input-md form-control" name="loc2" placeholder="到达站" type="text">
-            <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1  input-md form-control" id="mytimepicker" name="ddate" placeholder="日期" type="text">
+            <input class="col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1 input-md form-control" id="mytimepicker" name="ddate" placeholder="日期" type="text">
             <input class="hidden" type="text" value="queryRes" name = "id">
             <input class="hidden" type="text" name="catalog" value="{{catalog}}">
             <button class="btn-lg btn-search glyphicon glyphicon-search col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-1" type="button" onclick="queryTicket()"></button>
@@ -271,6 +271,16 @@
         queryTicket();
         {% endif %}
     });
+
+   $(document.getElementById("mytimepicker")).datetimepicker({
+        format: "YYYY-MM-DD",
+        locale: 'zh-CN',
+        widgetPositioning:{
+            horizontal: 'right'
+        },
+        minDate:'{{min_date}}',
+        maxDate:'{{max_date}}'
+   });
 
 </script>
 {% endblock %}

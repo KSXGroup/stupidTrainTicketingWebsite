@@ -46,6 +46,7 @@ body{
     border-width: 2px;
     background: rgba(0,0,0,0.2);
     margin-top: 20%;
+    position:relative;
 }
 .btn{
     border-width: 2px;

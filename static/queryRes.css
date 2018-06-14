@@ -3,6 +3,7 @@
     background-color: rgba(0,0,0,0.2);
     font-size: 20px;
     padding: 1%;
+    position:relative;
 }
 
 .container-fluid-special{
@@ -10,6 +11,7 @@
     font-size: 20px;
     padding: 1%;
     margin-top: 0.5%;
+    position:relative;
 }
 
 .checkbox-inline,
@@ -121,8 +123,6 @@ input::input-placeholder{
  :-ms-input-placeholder {
        color:#d9d9d9 !important;
   }
-
-
 
 
 

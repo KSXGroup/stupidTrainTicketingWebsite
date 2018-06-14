@@ -1,7 +1,7 @@
 body{
     background-color:#11F4ED;
     background: url("../static/bg4.jpg") no-repeat center center fixed;
-    background-size: 100%  100%;
+    background-size: auto auto;
 }
 
 .form-control:focus{
@@ -41,5 +41,32 @@ body{
 .dropdown-menu > li > a{
     color:white;
     font-size: 110%;
+}
+
+.bootstrap-datetimepicker-widget{
+    background-color:rgba(0,0,0,0.3);
+    color:white;
+}
+
+.bootstrap-datetimepicker-widget table td{
+    border-radius:0px;
+}
+
+.bootstrap-datetimepicker-widget table td.year:hover,
+.bootstrap-datetimepicker-widget table td.month:hover,
+.bootstrap-datetimepicker-widget table td.day:hover,
+.bootstrap-datetimepicker-widget table td.hour:hover,
+.bootstrap-datetimepicker-widget table td.minute:hover,
+.bootstrap-datetimepicker-widget table td.second:hover {
+  background-color:rgba(0,0,0,0.3);
+  cursor: pointer;
+}
+
+.bootstrap-datetimepicker-widget table thead tr:first-child th {
+  border-radius:0px;
+}
+
+.bootstrap-datetimepicker-widget table thead tr:first-child th:hover {
+  background:rgba(0,0,0,0.3);
 }
 
