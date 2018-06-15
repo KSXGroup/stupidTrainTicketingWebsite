@@ -3,7 +3,7 @@ from flask import request, render_template, abort, redirect, url_for, session
 from datetime import datetime, timedelta
 from subprocess import Popen, PIPE, STDOUT
 import fcntl, os, json, re
-import pdb
+from werkzeug.contrib.fixers import ProxyFix
 
 app = Flask(__name__)
 
@@ -413,5 +413,6 @@ def hzfengsy():
 
 
 if __name__ == '__main__':
+    app.wsgi_app = ProxyFix(app.wsgi_app)
     app.run(host = '0.0.0.0', port = 80, debug=True)
 
